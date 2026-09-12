@@ -9,6 +9,8 @@ import {
   ArrowRight,
 } from "lucide-react";
 
+import smartPaySquareLogo from "./assets/smartpay-square.png";
+
 function Login() {
   const navigate = useNavigate();
 
@@ -96,10 +98,18 @@ function Login() {
   return (
     <div className="auth-page">
       <div className="auth-card">
+
+        {/* =====================================================
+            AUTH LOGO
+        ====================================================== */}
+
         <div className="auth-logo">
-          <div className="auth-logo-icon">
-            <ShieldCheck size={27} />
-          </div>
+
+          <img
+            src={smartPaySquareLogo}
+            alt="SmartPay Safe"
+            className="auth-brand-logo"
+          />
 
           <div>
             <h2>
@@ -110,9 +120,15 @@ function Login() {
               SAFE PAYMENTS
             </p>
           </div>
+
         </div>
 
+        {/* =====================================================
+            HEADING
+        ====================================================== */}
+
         <div className="auth-heading">
+
           <h1>
             Welcome Back
           </h1>
@@ -121,18 +137,28 @@ function Login() {
             Login to continue protecting your digital
             payments.
           </p>
+
         </div>
+
+        {/* =====================================================
+            LOGIN FORM
+        ====================================================== */}
 
         <form
           className="auth-form"
           onSubmit={handleSubmit}
         >
+
+          {/* EMAIL */}
+
           <div className="auth-input-group">
+
             <label>
               Email Address
             </label>
 
             <div className="auth-input-wrapper">
+
               <Mail size={18} />
 
               <input
@@ -143,15 +169,21 @@ function Login() {
                 onChange={handleChange}
                 required
               />
+
             </div>
+
           </div>
 
+          {/* PASSWORD */}
+
           <div className="auth-input-group">
+
             <label>
               Password
             </label>
 
             <div className="auth-input-wrapper">
+
               <LockKeyhole size={18} />
 
               <input
@@ -187,14 +219,19 @@ function Login() {
                   <Eye size={18} />
                 )}
               </button>
+
             </div>
+
           </div>
+
+          {/* LOGIN BUTTON */}
 
           <button
             type="submit"
             className="auth-submit-btn"
             disabled={loading}
           >
+
             {loading
               ? "Logging in..."
               : "Login"}
@@ -202,10 +239,17 @@ function Login() {
             {!loading && (
               <ArrowRight size={18} />
             )}
+
           </button>
+
         </form>
 
+        {/* =====================================================
+            FOOTER
+        ====================================================== */}
+
         <div className="auth-footer">
+
           <span>
             Don't have an account?
           </span>
@@ -213,15 +257,23 @@ function Login() {
           <Link to="/register">
             Create Account
           </Link>
+
         </div>
 
+        {/* =====================================================
+            SECURITY MESSAGE
+        ====================================================== */}
+
         <div className="auth-security">
+
           <ShieldCheck size={17} />
 
           <span>
             Your payment safety starts here.
           </span>
+
         </div>
+
       </div>
     </div>
   );
