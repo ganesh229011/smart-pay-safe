@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import {
   BrowserRouter,
   Routes,
@@ -18,6 +19,8 @@ import Settings from "./Settings";
 import Login from "./Login";
 import Register from "./Register";
 
+import smartPayLogo from "./assets/smartpay-logo.png";
+
 import "./App.css";
 
 function AppContent() {
@@ -26,15 +29,18 @@ function AppContent() {
   /* ================= LOGIN STATE ================= */
 
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return Boolean(localStorage.getItem("smartPayToken"));
+    return Boolean(
+      localStorage.getItem("smartPayToken")
+    );
   });
 
   /* ================= CURRENT USER ================= */
 
   const getCurrentUser = () => {
-    const savedUser = localStorage.getItem(
-      "smartPayCurrentUser"
-    );
+    const savedUser =
+      localStorage.getItem(
+        "smartPayCurrentUser"
+      );
 
     if (!savedUser) {
       return {
@@ -53,15 +59,16 @@ function AppContent() {
     }
   };
 
-  const [currentUser, setCurrentUser] = useState(
-    getCurrentUser
-  );
+  const [currentUser, setCurrentUser] =
+    useState(getCurrentUser);
 
   /* ================= THEME ================= */
 
   const [darkMode, setDarkMode] = useState(() => {
     const savedSettings =
-      localStorage.getItem("smartPaySettings");
+      localStorage.getItem(
+        "smartPaySettings"
+      );
 
     if (savedSettings) {
       try {
@@ -86,12 +93,14 @@ function AppContent() {
     );
   }, [darkMode]);
 
-  /* ================= LISTEN FOR THEME UPDATE ================= */
+  /* ================= THEME UPDATE ================= */
 
   useEffect(() => {
     const handleThemeUpdate = () => {
       const savedSettings =
-        localStorage.getItem("smartPaySettings");
+        localStorage.getItem(
+          "smartPaySettings"
+        );
 
       if (!savedSettings) {
         setDarkMode(true);
@@ -123,11 +132,12 @@ function AppContent() {
     };
   }, []);
 
-  /* ================= LISTEN FOR USER UPDATE ================= */
+  /* ================= USER UPDATE ================= */
 
   useEffect(() => {
     const handleUserUpdate = () => {
-      const updatedUser = getCurrentUser();
+      const updatedUser =
+        getCurrentUser();
 
       setCurrentUser(updatedUser);
     };
@@ -145,15 +155,22 @@ function AppContent() {
     };
   }, []);
 
-  /* ================= LISTEN FOR LOGIN / LOGOUT ================= */
+  /* ================= LOGIN / LOGOUT UPDATE ================= */
 
   useEffect(() => {
     const handleAuthUpdate = () => {
       const token =
-        localStorage.getItem("smartPayToken");
+        localStorage.getItem(
+          "smartPayToken"
+        );
 
-      setIsLoggedIn(Boolean(token));
-      setCurrentUser(getCurrentUser());
+      setIsLoggedIn(
+        Boolean(token)
+      );
+
+      setCurrentUser(
+        getCurrentUser()
+      );
     };
 
     window.addEventListener(
@@ -172,10 +189,14 @@ function AppContent() {
   /* ================= LOGOUT ================= */
 
   const handleLogout = () => {
-    localStorage.removeItem("smartPayToken");
+    localStorage.removeItem(
+      "smartPayToken"
+    );
+
     localStorage.removeItem(
       "smartPayCurrentUser"
     );
+
     localStorage.removeItem(
       "smartPayLoggedIn"
     );
@@ -195,7 +216,6 @@ function AppContent() {
       "You have been logged out successfully."
     );
 
-    // After logout, show public Home page
     navigate("/", {
       replace: true,
     });
@@ -209,26 +229,31 @@ function AppContent() {
       name: "Home",
       icon: "⌂",
     },
+
     {
       path: "/dashboard",
       name: "Dashboard",
       icon: "▣",
     },
+
     {
       path: "/risk-checker",
       name: "Risk Checker",
       icon: "🛡",
     },
+
     {
       path: "/transactions",
       name: "Transactions",
       icon: "💳",
     },
+
     {
       path: "/fraud-alerts",
       name: "Fraud Alerts",
       icon: "⚠",
     },
+
     {
       path: "/safety-center",
       name: "Safety Center",
@@ -243,27 +268,32 @@ function AppContent() {
 
       <aside className="sidebar">
 
+        {/* ================= SMART PAY-SAFE BRAND ================= */}
+
         <div className="logo">
 
-          <div className="logo-icon">
-            🛡
-          </div>
+          <img
+            src={smartPayLogo}
+            alt="SmartPay Security Logo"
+            className="brand-logo"
+          />
 
           <div className="logo-text">
 
             <h2>
-              Smart<span>Pay</span>
+              Smart
+              <span>Pay</span>
             </h2>
 
             <p>
-              SAFE PAYMENTS
+              SAFE DIGITAL PAYMENT ASSISTANCE
             </p>
 
           </div>
 
         </div>
 
-        {/* MAIN MENU */}
+        {/* ================= MAIN MENU ================= */}
 
         <nav className="navigation">
 
@@ -295,7 +325,7 @@ function AppContent() {
 
         </nav>
 
-        {/* ACCOUNT */}
+        {/* ================= ACCOUNT ================= */}
 
         <div className="sidebar-bottom">
 
@@ -369,7 +399,7 @@ function AppContent() {
 
       <main className="main">
 
-        {/* TOPBAR */}
+        {/* ================= TOPBAR ================= */}
 
         <header className="topbar">
 
@@ -464,7 +494,7 @@ function AppContent() {
             }
           />
 
-          {/* PUBLIC HOME */}
+          {/* HOME */}
 
           <Route
             path="/"
@@ -586,6 +616,8 @@ function AppContent() {
     </div>
   );
 }
+
+/* ================= APP ================= */
 
 function App() {
   return (

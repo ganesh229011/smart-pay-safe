@@ -8096,3 +8096,102 @@ body.light-mode .header-security {
     display: none;
   }
 }
+
+
+/* =========================================================
+   SMART PAY-SAFE SIDEBAR BRAND
+   Updated for image + text layout
+========================================================= */
+
+.sidebar .logo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  min-width: 0;
+  padding: 0 10px 28px;
+  overflow: hidden;
+}
+
+/* User-provided shield logo */
+.sidebar .brand-logo {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  max-width: 48px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 12px;
+  display: block;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 9px rgba(34, 211, 238, 0.28));
+}
+
+/* Brand text beside logo */
+.sidebar .logo-text {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.sidebar .logo-text h2 {
+  margin: 0;
+  font-size: 19px;
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #f8fbff;
+  white-space: nowrap;
+}
+
+.sidebar .logo-text h2 span {
+  display: inline;
+  margin-left: 3px;
+  font-size: inherit;
+  letter-spacing: -0.5px;
+  background: linear-gradient(
+    90deg,
+    #22d3ee,
+    #38bdf8 50%,
+    #6366f1
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.sidebar .logo-text p {
+  margin: 6px 0 0;
+  font-size: 6.5px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 1.05px;
+  color: #71809a;
+  white-space: nowrap;
+}
+
+/* Tablet / collapsed sidebar */
+@media (max-width: 1000px) {
+  .sidebar .logo {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .sidebar .brand-logo {
+    width: 43px;
+    height: 43px;
+    min-width: 43px;
+    max-width: 43px;
+  }
+
+  .sidebar .logo-text {
+    display: none;
+  }
+}
+
+/* Mobile */
+@media (max-width: 650px) {
+  .sidebar .logo {
+    padding-bottom: 20px;
+  }
+}
