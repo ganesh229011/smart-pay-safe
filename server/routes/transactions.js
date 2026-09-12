@@ -1,5 +1,4 @@
 const express = require("express");
-const mongoose = require("mongoose");
 
 const Transaction = require("../models/Transaction");
 const authMiddleware = require("../middleware/authMiddleware");
@@ -28,8 +27,8 @@ router.get("/", authMiddleware, async (req, res) => {
     );
 
     res.status(500).json({
-      message:
-        "Unable to fetch transactions.",
+      message: "Unable to fetch transactions.",
+      error: error.message,
     });
   }
 });
@@ -40,6 +39,16 @@ router.get("/", authMiddleware, async (req, res) => {
 
 router.post("/", authMiddleware, async (req, res) => {
   try {
+    console.log(
+      "Transaction request received:",
+      req.body
+    );
+
+    console.log(
+      "Logged in user:",
+      req.user
+    );
+
     const {
       receiver,
       type,
@@ -71,6 +80,13 @@ router.post("/", authMiddleware, async (req, res) => {
       return res.status(400).json({
         message:
           "Please provide a valid transaction amount.",
+      });
+    }
+
+    if (!req.user?.id) {
+      return res.status(401).json({
+        message:
+          "User authentication information is missing.",
       });
     }
 
@@ -119,6 +135,11 @@ router.post("/", authMiddleware, async (req, res) => {
             : [],
       });
 
+    console.log(
+      "Transaction saved successfully:",
+      transaction._id
+    );
+
     /* -----------------------------------------
        RESPONSE
     ----------------------------------------- */
@@ -131,18 +152,19 @@ router.post("/", authMiddleware, async (req, res) => {
   } catch (error) {
     console.error(
       "Create transaction error:",
-      error
+      error.message
     );
 
     res.status(500).json({
       message:
         "Unable to save transaction.",
+      error: error.message,
     });
   }
 });
 
 /* =========================================================
-   DELETE ALL TRANSACTIONS FOR LOGGED-IN USER
+   DELETE ALL TRANSACTIONS
 ========================================================= */
 
 router.delete(
@@ -161,12 +183,13 @@ router.delete(
     } catch (error) {
       console.error(
         "Clear transactions error:",
-        error
+        error.message
       );
 
       res.status(500).json({
         message:
           "Unable to clear transaction history.",
+        error: error.message,
       });
     }
   }
