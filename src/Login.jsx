@@ -97,6 +97,7 @@ function Login() {
 
   return (
     <div className="auth-page">
+
       <div className="auth-card">
 
         {/* =====================================================
@@ -109,6 +110,17 @@ function Login() {
             src={smartPaySquareLogo}
             alt="SmartPay Safe"
             className="auth-brand-logo"
+            style={{
+              width: "58px",
+              height: "58px",
+              minWidth: "58px",
+              maxWidth: "58px",
+              objectFit: "cover",
+              objectPosition: "center",
+              borderRadius: "14px",
+              display: "block",
+              flexShrink: 0,
+            }}
           />
 
           <div>
@@ -275,6 +287,7 @@ function Login() {
         </div>
 
       </div>
+
     </div>
   );
 }
