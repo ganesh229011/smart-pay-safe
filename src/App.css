@@ -7311,3 +7311,471 @@ body.light-mode .toggle.active {
     background: transparent;
   }
 }
+/* =========================================================
+   SMART PAY-SAFE HOME - PREMIUM FINTECH POLISH
+   Overrides for the updated Home.jsx
+   ========================================================= */
+
+.home-page {
+  position: relative;
+  min-height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 78% 18%, rgba(28, 137, 255, 0.16), transparent 27%),
+    radial-gradient(circle at 92% 72%, rgba(96, 64, 255, 0.10), transparent 28%),
+    linear-gradient(135deg, #050a13 0%, #07111e 52%, #06101c 100%);
+}
+
+.home-page::before {
+  content: "";
+  position: absolute;
+  width: 900px;
+  height: 900px;
+  top: -560px;
+  right: -260px;
+  border: 1px solid rgba(76, 170, 255, 0.07);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 75px rgba(76, 170, 255, 0.025),
+    0 0 0 150px rgba(76, 170, 255, 0.018);
+  pointer-events: none;
+}
+
+.home-hero {
+  position: relative;
+  max-width: 1380px;
+  min-height: 690px;
+  padding: 78px 58px 92px;
+  grid-template-columns: minmax(0, 1.05fr) minmax(390px, 0.95fr);
+  gap: 74px;
+}
+
+.home-hero::after {
+  content: "";
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  right: 8%;
+  top: 50%;
+  transform: translateY(-42%);
+  border: 1px solid rgba(59, 150, 255, 0.045);
+  border-radius: 50%;
+  box-shadow: 0 0 0 55px rgba(59, 150, 255, 0.018);
+  pointer-events: none;
+}
+
+.home-hero-content {
+  max-width: 700px;
+}
+
+.home-badge {
+  padding: 10px 16px;
+  margin-bottom: 28px;
+  border-color: rgba(34, 211, 238, 0.20);
+  background: rgba(34, 211, 238, 0.055);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  letter-spacing: 1.6px;
+}
+
+.home-hero h1 {
+  margin: 0;
+  color: #f8fbff;
+  font-size: clamp(48px, 5.1vw, 78px);
+  line-height: 1.02;
+  letter-spacing: -3.5px;
+  font-weight: 800;
+}
+
+.home-hero h1 span {
+  background: linear-gradient(90deg, #f8fbff 0%, #9edfff 42%, #72a5ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.home-description {
+  max-width: 630px;
+  margin-top: 27px;
+  color: #8997aa;
+  font-size: 16px;
+  line-height: 1.78;
+}
+
+.home-buttons {
+  margin-top: 34px;
+  gap: 12px;
+}
+
+.primary-btn,
+.secondary-btn {
+  min-height: 48px;
+  padding: 13px 20px;
+  border-radius: 10px;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #4f8cff, #3974ed);
+  color: #ffffff;
+  box-shadow: 0 12px 34px rgba(54, 119, 245, 0.24);
+}
+
+.primary-btn:hover {
+  background: linear-gradient(135deg, #6299ff, #4680f2);
+  box-shadow: 0 16px 42px rgba(54, 119, 245, 0.34);
+}
+
+.secondary-btn {
+  background: rgba(255, 255, 255, 0.025);
+  border-color: rgba(255, 255, 255, 0.11);
+  color: #dce5f1;
+}
+
+.trust-list {
+  gap: 25px;
+  margin-top: 27px;
+}
+
+.trust-list div {
+  color: #728096;
+}
+
+.trust-list svg {
+  color: #42dca9;
+}
+
+.payment-card-wrapper {
+  max-width: 470px;
+  justify-self: end;
+  transform: translateY(3px);
+}
+
+.payment-glow {
+  width: 430px;
+  height: 430px;
+  background: rgba(28, 130, 255, 0.13);
+  filter: blur(105px);
+}
+
+.payment-card {
+  padding: 25px;
+  border-radius: 27px;
+  background: linear-gradient(145deg, rgba(20, 32, 49, 0.93), rgba(7, 15, 27, 0.96));
+  border-color: rgba(132, 174, 224, 0.16);
+  box-shadow:
+    0 35px 90px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.055);
+}
+
+.payment-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mini-logo {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+  background: rgba(72, 143, 255, 0.12);
+  border: 1px solid rgba(72, 143, 255, 0.16);
+  color: #71a6ff;
+}
+
+.payment-header p {
+  font-size: 9px;
+  letter-spacing: 1.7px;
+}
+
+.payment-header h3 {
+  font-size: 20px;
+}
+
+.activity-icon {
+  width: 43px;
+  height: 43px;
+  background: rgba(68, 130, 235, 0.10);
+  color: #70a5ff;
+}
+
+.balance-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 15px;
+  padding: 16px 17px;
+  border-radius: 15px;
+  background: rgba(72, 130, 224, 0.055);
+  border: 1px solid rgba(111, 158, 225, 0.10);
+}
+
+.balance-box span {
+  display: block;
+  margin-bottom: 6px;
+  color: #6f7e94;
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.balance-box strong {
+  color: #f1f6ff;
+  font-size: 23px;
+}
+
+.balance-box .safe-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  font-size: 9px;
+  padding: 7px 9px;
+}
+
+.risk-box {
+  padding: 20px;
+  border-radius: 18px;
+  background: rgba(4, 11, 21, 0.88);
+}
+
+.risk-number {
+  font-size: 48px;
+}
+
+.risk-box small {
+  display: block;
+  margin-top: 5px;
+  color: #34d399;
+  font-size: 10px;
+}
+
+.risk-circle {
+  width: 78px;
+  height: 78px;
+  border-width: 1px;
+  background: rgba(52, 211, 153, 0.045);
+  box-shadow: inset 0 0 22px rgba(52, 211, 153, 0.035);
+}
+
+.risk-progress {
+  height: 6px;
+  margin: 16px 0;
+  background: #172236;
+}
+
+.risk-progress div {
+  background: linear-gradient(90deg, #34d399, #48e1b0);
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.35);
+}
+
+.payment-detail {
+  padding: 13px 15px;
+  margin-top: 8px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.payment-detail strong {
+  color: #e9eff8;
+}
+
+.safe-message {
+  margin-top: 15px;
+  padding: 14px;
+  background: rgba(52, 211, 153, 0.045);
+}
+
+.safe-message-icon {
+  width: 35px;
+  height: 35px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgba(52, 211, 153, 0.08);
+}
+
+.payment-mini-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.payment-mini-stats div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 6px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.022);
+  color: #718097;
+  font-size: 9px;
+}
+
+.payment-mini-stats svg {
+  color: #6c9df2;
+}
+
+.features-section,
+.how-section,
+.security-section {
+  position: relative;
+}
+
+.section-heading span {
+  display: block;
+  max-width: 620px;
+  margin-top: 10px;
+  color: #68758a;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.feature-card {
+  min-height: 225px;
+  padding: 27px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.018));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.018);
+}
+
+.feature-card h3 {
+  font-size: 18px;
+}
+
+.feature-card p {
+  color: #728096;
+}
+
+.step-card {
+  min-height: 190px;
+  background: linear-gradient(145deg, #0d1726, #09111d);
+  transition: 0.25s ease;
+}
+
+.step-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(34, 211, 238, 0.18);
+}
+
+.security-card {
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.075), rgba(76, 110, 255, 0.035));
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.16);
+}
+
+/* Light mode */
+
+body.light-mode .home-page {
+  background:
+    radial-gradient(circle at 78% 18%, rgba(42, 150, 255, 0.10), transparent 27%),
+    #f4f7fb;
+}
+
+body.light-mode .home-hero h1 {
+  color: #172033;
+}
+
+body.light-mode .home-hero h1 span {
+  background: linear-gradient(90deg, #172033, #147bc5, #4b64c7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+body.light-mode .home-description {
+  color: #64748b;
+}
+
+body.light-mode .primary-btn {
+  color: #ffffff;
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+}
+
+body.light-mode .payment-card {
+  background: linear-gradient(145deg, #ffffff, #f5f9fd);
+  border-color: #dbe5ef;
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.10);
+}
+
+body.light-mode .payment-header h3,
+body.light-mode .payment-detail strong,
+body.light-mode .balance-box strong,
+body.light-mode .risk-number {
+  color: #172033;
+}
+
+body.light-mode .balance-box,
+body.light-mode .payment-mini-stats div {
+  background: #f7fafc;
+  border-color: #e5edf5;
+}
+
+body.light-mode .risk-box {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+body.light-mode .payment-detail {
+  background: #f8fafc;
+}
+
+body.light-mode .safe-message {
+  background: #f0fdf9;
+  border-color: #d1fae5;
+}
+
+@media (max-width: 1100px) {
+  .home-hero {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .home-hero-content {
+    max-width: 760px;
+  }
+
+  .payment-card-wrapper {
+    justify-self: center;
+  }
+}
+
+@media (max-width: 700px) {
+  .home-hero {
+    padding: 52px 22px 65px;
+    gap: 42px;
+  }
+
+  .home-hero h1 {
+    font-size: 47px;
+    letter-spacing: -2.2px;
+  }
+
+  .home-description {
+    font-size: 14px;
+  }
+
+  .home-buttons {
+    flex-direction: column;
+  }
+
+  .primary-btn,
+  .secondary-btn {
+    width: 100%;
+  }
+
+  .payment-card-wrapper {
+    max-width: 100%;
+  }
+
+  .payment-card {
+    padding: 18px;
+  }
+
+  .payment-mini-stats div {
+    font-size: 8px;
+  }
+}
