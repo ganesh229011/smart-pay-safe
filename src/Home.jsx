@@ -13,6 +13,8 @@ import {
 
 import { useNavigate } from "react-router-dom";
 
+import smartPayHorizontalLogo from "./assets/smartpay-horizontal.png";
+
 function Home() {
   const navigate = useNavigate();
 
@@ -26,6 +28,34 @@ function Home() {
       <section className="home-hero">
 
         <div className="home-hero-content">
+
+          {/* HORIZONTAL BRAND LOGO */}
+
+          <div
+            style={{
+              marginBottom: "24px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              width: "100%",
+            }}
+          >
+            <img
+              src={smartPayHorizontalLogo}
+              alt="Smart Pay-Safe"
+              style={{
+                width: "250px",
+                maxWidth: "75%",
+                height: "auto",
+                display: "block",
+                objectFit: "contain",
+                objectPosition: "left center",
+                mixBlendMode: "screen",
+                filter:
+                  "drop-shadow(0 0 14px rgba(34, 211, 238, 0.22))",
+              }}
+            />
+          </div>
 
           <div className="home-badge">
             <span className="pulse-dot"></span>
@@ -87,18 +117,11 @@ function Home() {
 
         </div>
 
-
-        {/* =================================================
-            PAYMENT DASHBOARD VISUAL
-        ================================================= */}
-
         <div className="payment-card-wrapper">
 
           <div className="payment-glow"></div>
 
           <div className="payment-card">
-
-            {/* Header */}
 
             <div className="payment-header">
 
@@ -121,9 +144,6 @@ function Home() {
 
             </div>
 
-
-            {/* Balance */}
-
             <div className="balance-box">
 
               <div>
@@ -140,9 +160,6 @@ function Home() {
               </div>
 
             </div>
-
-
-            {/* Risk Score */}
 
             <div className="risk-box">
 
@@ -169,15 +186,9 @@ function Home() {
 
             </div>
 
-
-            {/* Progress */}
-
             <div className="risk-progress">
               <div></div>
             </div>
-
-
-            {/* Transaction */}
 
             <div className="payment-detail">
 
@@ -203,9 +214,6 @@ function Home() {
 
             </div>
 
-
-            {/* Safe Message */}
-
             <div className="safe-message">
 
               <div className="safe-message-icon">
@@ -225,9 +233,6 @@ function Home() {
               </div>
 
             </div>
-
-
-            {/* Bottom Mini Stats */}
 
             <div className="payment-mini-stats">
 
@@ -254,7 +259,6 @@ function Home() {
 
       </section>
 
-
       {/* =====================================================
           FEATURES
       ===================================================== */}
@@ -278,7 +282,6 @@ function Home() {
 
         </div>
 
-
         <div className="feature-grid">
 
           <FeatureCard
@@ -288,14 +291,12 @@ function Home() {
             onClick={() => navigate("/risk-checker")}
           />
 
-
           <FeatureCard
             icon={<AlertTriangle size={24} />}
             title="Fraud Alerts"
             text="Learn about common digital payment scams and recognize warning signs before you become a victim."
             onClick={() => navigate("/fraud-alerts")}
           />
-
 
           <FeatureCard
             icon={<LockKeyhole size={24} />}
@@ -307,7 +308,6 @@ function Home() {
         </div>
 
       </section>
-
 
       {/* =====================================================
           HOW IT WORKS
@@ -330,7 +330,6 @@ function Home() {
           </span>
 
         </div>
-
 
         <div className="steps-grid">
 
@@ -355,7 +354,6 @@ function Home() {
         </div>
 
       </section>
-
 
       {/* =====================================================
           SECURITY
@@ -402,11 +400,6 @@ function Home() {
     </div>
   );
 }
-
-
-/* =========================================================
-   FEATURE CARD
-========================================================= */
 
 function FeatureCard({
   icon,
@@ -462,11 +455,6 @@ function FeatureCard({
   );
 }
 
-
-/* =========================================================
-   STEP CARD
-========================================================= */
-
 function Step({
   number,
   title,
@@ -494,6 +482,5 @@ function Step({
   );
 
 }
-
 
 export default Home;
