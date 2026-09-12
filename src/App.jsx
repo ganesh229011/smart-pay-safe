@@ -29,7 +29,6 @@ function AppContent() {
     return Boolean(localStorage.getItem("smartPayToken"));
   });
 
-
   /* ================= CURRENT USER ================= */
 
   const getCurrentUser = () => {
@@ -54,11 +53,9 @@ function AppContent() {
     }
   };
 
-
   const [currentUser, setCurrentUser] = useState(
     getCurrentUser
   );
-
 
   /* ================= THEME ================= */
 
@@ -80,7 +77,6 @@ function AppContent() {
     return true;
   });
 
-
   /* ================= APPLY THEME ================= */
 
   useEffect(() => {
@@ -89,7 +85,6 @@ function AppContent() {
       !darkMode
     );
   }, [darkMode]);
-
 
   /* ================= LISTEN FOR THEME UPDATE ================= */
 
@@ -115,12 +110,10 @@ function AppContent() {
       }
     };
 
-
     window.addEventListener(
       "themeUpdated",
       handleThemeUpdate
     );
-
 
     return () => {
       window.removeEventListener(
@@ -129,7 +122,6 @@ function AppContent() {
       );
     };
   }, []);
-
 
   /* ================= LISTEN FOR USER UPDATE ================= */
 
@@ -140,12 +132,10 @@ function AppContent() {
       setCurrentUser(updatedUser);
     };
 
-
     window.addEventListener(
       "userUpdated",
       handleUserUpdate
     );
-
 
     return () => {
       window.removeEventListener(
@@ -155,7 +145,6 @@ function AppContent() {
     };
   }, []);
 
-
   /* ================= LISTEN FOR LOGIN / LOGOUT ================= */
 
   useEffect(() => {
@@ -164,16 +153,13 @@ function AppContent() {
         localStorage.getItem("smartPayToken");
 
       setIsLoggedIn(Boolean(token));
-
       setCurrentUser(getCurrentUser());
     };
-
 
     window.addEventListener(
       "authUpdated",
       handleAuthUpdate
     );
-
 
     return () => {
       window.removeEventListener(
@@ -182,7 +168,6 @@ function AppContent() {
       );
     };
   }, []);
-
 
   /* ================= LOGOUT ================= */
 
@@ -210,9 +195,11 @@ function AppContent() {
       "You have been logged out successfully."
     );
 
-    navigate("/login");
+    // After logout, show public Home page
+    navigate("/", {
+      replace: true,
+    });
   };
-
 
   /* ================= MENU ================= */
 
@@ -249,7 +236,6 @@ function AppContent() {
     },
   ];
 
-
   return (
     <div className="app">
 
@@ -277,7 +263,6 @@ function AppContent() {
 
         </div>
 
-
         {/* MAIN MENU */}
 
         <nav className="navigation">
@@ -285,7 +270,6 @@ function AppContent() {
           <p className="menu-title">
             MAIN MENU
           </p>
-
 
           {menuItems.map((item) => (
             <NavLink
@@ -311,7 +295,6 @@ function AppContent() {
 
         </nav>
 
-
         {/* ACCOUNT */}
 
         <div className="sidebar-bottom">
@@ -319,7 +302,6 @@ function AppContent() {
           <p className="menu-title">
             ACCOUNT
           </p>
-
 
           {isLoggedIn ? (
             <>
@@ -342,7 +324,6 @@ function AppContent() {
                 </span>
 
               </NavLink>
-
 
               <button
                 type="button"
@@ -384,7 +365,6 @@ function AppContent() {
 
       </aside>
 
-
       {/* ================= MAIN ================= */}
 
       <main className="main">
@@ -405,7 +385,6 @@ function AppContent() {
 
           </div>
 
-
           {isLoggedIn && (
 
             <div className="profile">
@@ -423,7 +402,6 @@ function AppContent() {
                 🔔
               </button>
 
-
               <div className="avatar">
 
                 {currentUser.name
@@ -431,7 +409,6 @@ function AppContent() {
                   .toUpperCase() || "U"}
 
               </div>
-
 
               <div className="profile-info">
 
@@ -450,7 +427,6 @@ function AppContent() {
           )}
 
         </header>
-
 
         {/* ================= ROUTES ================= */}
 
@@ -472,7 +448,6 @@ function AppContent() {
             }
           />
 
-
           {/* REGISTER */}
 
           <Route
@@ -489,23 +464,12 @@ function AppContent() {
             }
           />
 
-
-          {/* HOME */}
+          {/* PUBLIC HOME */}
 
           <Route
             path="/"
-            element={
-              isLoggedIn ? (
-                <Home />
-              ) : (
-                <Navigate
-                  to="/login"
-                  replace
-                />
-              )
-            }
+            element={<Home />}
           />
-
 
           {/* DASHBOARD */}
 
@@ -523,7 +487,6 @@ function AppContent() {
             }
           />
 
-
           {/* RISK CHECKER */}
 
           <Route
@@ -539,7 +502,6 @@ function AppContent() {
               )
             }
           />
-
 
           {/* TRANSACTIONS */}
 
@@ -557,7 +519,6 @@ function AppContent() {
             }
           />
 
-
           {/* FRAUD ALERTS */}
 
           <Route
@@ -573,7 +534,6 @@ function AppContent() {
               )
             }
           />
-
 
           {/* SAFETY CENTER */}
 
@@ -591,7 +551,6 @@ function AppContent() {
             }
           />
 
-
           {/* SETTINGS */}
 
           <Route
@@ -608,18 +567,13 @@ function AppContent() {
             }
           />
 
-
           {/* UNKNOWN ROUTE */}
 
           <Route
             path="*"
             element={
               <Navigate
-                to={
-                  isLoggedIn
-                    ? "/dashboard"
-                    : "/login"
-                }
+                to="/"
                 replace
               />
             }
@@ -633,7 +587,6 @@ function AppContent() {
   );
 }
 
-
 function App() {
   return (
     <BrowserRouter>
@@ -641,6 +594,5 @@ function App() {
     </BrowserRouter>
   );
 }
-
 
 export default App;

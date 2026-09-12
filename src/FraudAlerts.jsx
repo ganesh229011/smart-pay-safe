@@ -145,7 +145,9 @@ function FraudAlerts() {
             SECURITY CENTER
           </p>
 
-          <h2>Fraud Alerts</h2>
+          <h2>
+            Fraud Alerts
+          </h2>
 
           <p className="page-description">
             Stay informed about common digital payment scams
@@ -155,11 +157,12 @@ function FraudAlerts() {
 
         <div className="alert-status">
           <ShieldAlert size={20} />
-          <span>Protection Active</span>
+          <span>
+            Protection Active
+          </span>
         </div>
 
       </div>
-
 
       {/* ================= WARNING BANNER ================= */}
 
@@ -170,7 +173,9 @@ function FraudAlerts() {
         </div>
 
         <div>
-          <h3>Be alert before you pay</h3>
+          <h3>
+            Be alert before you pay
+          </h3>
 
           <p>
             Fraudsters often use urgency, fear and attractive
@@ -180,33 +185,51 @@ function FraudAlerts() {
 
       </div>
 
-
       {/* ================= STATS ================= */}
 
       <div className="fraud-stats">
 
         <div className="fraud-stat-card">
-          <span>Active Alerts</span>
-          <strong>{alerts.length}</strong>
+          <span>
+            Active Alerts
+          </span>
+
+          <strong>
+            {alerts.length}
+          </strong>
         </div>
 
         <div className="fraud-stat-card">
-          <span>Critical Threats</span>
-          <strong>{criticalCount}</strong>
+          <span>
+            Critical Threats
+          </span>
+
+          <strong>
+            {criticalCount}
+          </strong>
         </div>
 
         <div className="fraud-stat-card">
-          <span>High Risk</span>
-          <strong>{highCount}</strong>
+          <span>
+            High Risk
+          </span>
+
+          <strong>
+            {highCount}
+          </strong>
         </div>
 
         <div className="fraud-stat-card safe-stat">
-          <span>Your Status</span>
-          <strong>Protected</strong>
+          <span>
+            Your Status
+          </span>
+
+          <strong>
+            Protected
+          </strong>
         </div>
 
       </div>
-
 
       {/* ================= SECTION HEADER ================= */}
 
@@ -228,7 +251,6 @@ function FraudAlerts() {
 
       </div>
 
-
       {/* ================= SEARCH + FILTER ================= */}
 
       <div className="fraud-toolbar">
@@ -249,7 +271,6 @@ function FraudAlerts() {
 
         </div>
 
-
         <div className="fraud-filter">
 
           <SlidersHorizontal size={16} />
@@ -261,16 +282,26 @@ function FraudAlerts() {
               setSeverityFilter(event.target.value)
             }
           >
-            <option value="All">All Severity</option>
-            <option value="Critical">Critical</option>
-            <option value="High">High</option>
-            <option value="Medium">Medium</option>
+            <option value="All">
+              All Severity
+            </option>
+
+            <option value="Critical">
+              Critical
+            </option>
+
+            <option value="High">
+              High
+            </option>
+
+            <option value="Medium">
+              Medium
+            </option>
           </select>
 
         </div>
 
       </div>
-
 
       {/* ================= ALERT LIST ================= */}
 
@@ -282,7 +313,9 @@ function FraudAlerts() {
 
             <Search size={32} />
 
-            <h3>No alerts found</h3>
+            <h3>
+              No alerts found
+            </h3>
 
             <p>
               Try another search term or severity level.
@@ -312,7 +345,9 @@ function FraudAlerts() {
             return (
               <div
                 className={`fraud-card ${
-                  isOpen ? "fraud-card-open" : ""
+                  isOpen
+                    ? "fraud-card-open"
+                    : ""
                 }`}
                 key={alert.id}
               >
@@ -332,7 +367,6 @@ function FraudAlerts() {
                     <Icon size={22} />
                   </div>
 
-
                   <div className="fraud-card-content">
 
                     <div className="fraud-title-row">
@@ -349,11 +383,9 @@ function FraudAlerts() {
 
                     </div>
 
-
                     <p>
                       {alert.description}
                     </p>
-
 
                     <span className="fraud-category">
                       {alert.category}
@@ -361,16 +393,16 @@ function FraudAlerts() {
 
                   </div>
 
-
                   <ChevronDown
                     size={20}
                     className={`chevron ${
-                      isOpen ? "rotate" : ""
+                      isOpen
+                        ? "rotate"
+                        : ""
                     }`}
                   />
 
                 </button>
-
 
                 {/* ================= DETAILS ================= */}
 
@@ -404,7 +436,6 @@ function FraudAlerts() {
 
       </div>
 
-
       {/* ================= AWARENESS ================= */}
 
       <div className="fraud-awareness">
@@ -428,7 +459,6 @@ function FraudAlerts() {
         </div>
 
       </div>
-
 
       {/* ================= GOLDEN RULE ================= */}
 

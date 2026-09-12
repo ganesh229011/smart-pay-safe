@@ -12,6 +12,36 @@ function Transactions() {
   const [transactions, setTransactions] = useState([]);
   const [search, setSearch] = useState("");
 
+  /* ================= CURRENT USER ================= */
+
+  const getCurrentUser = () => {
+    const savedUser = localStorage.getItem(
+      "smartPayCurrentUser"
+    );
+
+    if (!savedUser) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(savedUser);
+    } catch {
+      return null;
+    }
+  };
+
+  /* ================= USER-SPECIFIC STORAGE KEY ================= */
+
+  const getTransactionStorageKey = () => {
+    const currentUser = getCurrentUser();
+
+    if (!currentUser?.email) {
+      return null;
+    }
+
+    return `smartPayTransactions_${currentUser.email}`;
+  };
+
   /* ================= DEMO TRANSACTIONS ================= */
 
   const demoTransactions = [
@@ -55,17 +85,26 @@ function Transactions() {
     },
   ];
 
-  /* ================= LOAD TRANSACTIONS ================= */
+  /* ================= LOAD USER TRANSACTIONS ================= */
 
   useEffect(() => {
     const loadTransactions = () => {
-      const saved = localStorage.getItem("smartPayTransactions");
+      const storageKey = getTransactionStorageKey();
 
+      // No logged-in user
+      if (!storageKey) {
+        setTransactions([]);
+        return;
+      }
+
+      const saved = localStorage.getItem(storageKey);
+
+      // First time this user opens Transactions
       if (!saved) {
         setTransactions(demoTransactions);
 
         localStorage.setItem(
-          "smartPayTransactions",
+          storageKey,
           JSON.stringify(demoTransactions)
         );
 
@@ -78,7 +117,7 @@ function Transactions() {
         if (Array.isArray(parsedTransactions)) {
           setTransactions(parsedTransactions);
         } else {
-          setTransactions(demoTransactions);
+          setTransactions([]);
         }
       } catch (error) {
         console.error(
@@ -86,30 +125,57 @@ function Transactions() {
           error
         );
 
-        setTransactions(demoTransactions);
+        setTransactions([]);
       }
     };
 
     loadTransactions();
 
     /* Refresh from other browser tabs/windows */
-    window.addEventListener("storage", loadTransactions);
+    const handleStorageUpdate = () => {
+      loadTransactions();
+    };
 
-    /* Refresh immediately after Risk Checker updates data */
+    window.addEventListener(
+      "storage",
+      handleStorageUpdate
+    );
+
+    /* Refresh after Risk Checker updates data */
+    const handleTransactionUpdate = () => {
+      loadTransactions();
+    };
+
     window.addEventListener(
       "transactionsUpdated",
-      loadTransactions
+      handleTransactionUpdate
+    );
+
+    /* Refresh after login/logout */
+    const handleAuthUpdate = () => {
+      setSearch("");
+      loadTransactions();
+    };
+
+    window.addEventListener(
+      "authUpdated",
+      handleAuthUpdate
     );
 
     return () => {
       window.removeEventListener(
         "storage",
-        loadTransactions
+        handleStorageUpdate
       );
 
       window.removeEventListener(
         "transactionsUpdated",
-        loadTransactions
+        handleTransactionUpdate
+      );
+
+      window.removeEventListener(
+        "authUpdated",
+        handleAuthUpdate
       );
     };
   }, []);
@@ -148,13 +214,15 @@ function Transactions() {
   /* ================= SAFE COUNT ================= */
 
   const safeCount = transactions.filter(
-    (transaction) => transaction.status === "Safe"
+    (transaction) =>
+      transaction.status === "Safe"
   ).length;
 
   /* ================= REVIEW COUNT ================= */
 
   const reviewCount = transactions.filter(
-    (transaction) => transaction.status === "Review"
+    (transaction) =>
+      transaction.status === "Review"
   ).length;
 
   return (
@@ -169,7 +237,9 @@ function Transactions() {
             PAYMENT ACTIVITY
           </p>
 
-          <h2>Transaction History</h2>
+          <h2>
+            Transaction History
+          </h2>
 
           <p className="page-subtitle">
             Review your digital payment activity and
@@ -182,7 +252,6 @@ function Transactions() {
         </div>
 
       </div>
-
 
       {/* ================= SUMMARY ================= */}
 
@@ -197,7 +266,9 @@ function Transactions() {
           </div>
 
           <div>
-            <span>TOTAL TRANSACTIONS</span>
+            <span>
+              TOTAL TRANSACTIONS
+            </span>
 
             <strong>
               {transactions.length}
@@ -205,7 +276,6 @@ function Transactions() {
           </div>
 
         </div>
-
 
         {/* SAFE PAYMENTS */}
 
@@ -216,7 +286,9 @@ function Transactions() {
           </div>
 
           <div>
-            <span>SAFE PAYMENTS</span>
+            <span>
+              SAFE PAYMENTS
+            </span>
 
             <strong>
               {safeCount}
@@ -224,7 +296,6 @@ function Transactions() {
           </div>
 
         </div>
-
 
         {/* NEEDS REVIEW */}
 
@@ -235,7 +306,9 @@ function Transactions() {
           </div>
 
           <div>
-            <span>NEEDS REVIEW</span>
+            <span>
+              NEEDS REVIEW
+            </span>
 
             <strong>
               {reviewCount}
@@ -243,7 +316,6 @@ function Transactions() {
           </div>
 
         </div>
-
 
         {/* TOTAL AMOUNT */}
 
@@ -254,7 +326,9 @@ function Transactions() {
           </div>
 
           <div>
-            <span>TOTAL AMOUNT</span>
+            <span>
+              TOTAL AMOUNT
+            </span>
 
             <strong>
               ₹{totalAmount.toLocaleString("en-IN")}
@@ -265,7 +339,6 @@ function Transactions() {
 
       </div>
 
-
       {/* ================= TRANSACTION PANEL ================= */}
 
       <div className="transactions-panel">
@@ -275,13 +348,14 @@ function Transactions() {
         <div className="transactions-toolbar">
 
           <div>
-            <h3>Recent Transactions</h3>
+            <h3>
+              Recent Transactions
+            </h3>
 
             <p>
               Your latest payment activity and risk checks
             </p>
           </div>
-
 
           {/* SEARCH */}
 
@@ -302,21 +376,27 @@ function Transactions() {
 
         </div>
 
-
         {/* ================= TABLE HEADER ================= */}
 
         <div className="transaction-table-header">
 
-          <span>PAYMENT</span>
+          <span>
+            PAYMENT
+          </span>
 
-          <span>DATE</span>
+          <span>
+            DATE
+          </span>
 
-          <span>AMOUNT</span>
+          <span>
+            AMOUNT
+          </span>
 
-          <span>STATUS</span>
+          <span>
+            STATUS
+          </span>
 
         </div>
-
 
         {/* ================= TRANSACTION LIST ================= */}
 
@@ -384,7 +464,6 @@ function Transactions() {
 
                   </div>
 
-
                   {/* DATE */}
 
                   <span className="transaction-date">
@@ -403,7 +482,6 @@ function Transactions() {
 
                   </span>
 
-
                   {/* AMOUNT */}
 
                   <strong className="transaction-money">
@@ -414,7 +492,6 @@ function Transactions() {
                     ).toLocaleString("en-IN")}
 
                   </strong>
-
 
                   {/* STATUS */}
 
@@ -447,7 +524,6 @@ function Transactions() {
         </div>
 
       </div>
-
 
       {/* ================= SECURITY NOTE ================= */}
 

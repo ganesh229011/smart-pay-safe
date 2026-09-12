@@ -14,11 +14,50 @@ function Dashboard() {
 
   const [transactions, setTransactions] = useState([]);
 
+  /* ================= CURRENT USER ================= */
+
+  const getCurrentUser = () => {
+    const savedUser = localStorage.getItem(
+      "smartPayCurrentUser"
+    );
+
+    if (!savedUser) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(savedUser);
+    } catch {
+      return null;
+    }
+  };
+
+  /* ================= USER TRANSACTION KEY ================= */
+
+  const getTransactionStorageKey = () => {
+    const currentUser = getCurrentUser();
+
+    if (!currentUser?.email) {
+      return null;
+    }
+
+    return `smartPayTransactions_${currentUser.email}`;
+  };
+
   /* ================= LOAD TRANSACTIONS ================= */
 
   useEffect(() => {
     const loadTransactions = () => {
-      const saved = localStorage.getItem("smartPayTransactions");
+      const storageKey =
+        getTransactionStorageKey();
+
+      if (!storageKey) {
+        setTransactions([]);
+        return;
+      }
+
+      const saved =
+        localStorage.getItem(storageKey);
 
       if (!saved) {
         setTransactions([]);
@@ -26,7 +65,8 @@ function Dashboard() {
       }
 
       try {
-        const parsedTransactions = JSON.parse(saved);
+        const parsedTransactions =
+          JSON.parse(saved);
 
         if (Array.isArray(parsedTransactions)) {
           setTransactions(parsedTransactions);
@@ -34,28 +74,49 @@ function Dashboard() {
           setTransactions([]);
         }
       } catch (error) {
-        console.error("Failed to load transactions:", error);
+        console.error(
+          "Failed to load transactions:",
+          error
+        );
+
         setTransactions([]);
       }
     };
 
-    // Initial load
+    /* Initial load */
     loadTransactions();
 
-    // Refresh when localStorage changes
-    window.addEventListener("storage", loadTransactions);
+    /* Browser tab/storage updates */
+    window.addEventListener(
+      "storage",
+      loadTransactions
+    );
 
-    // Refresh immediately after Risk Checker updates transactions
+    /* Risk Checker updates */
     window.addEventListener(
       "transactionsUpdated",
       loadTransactions
     );
 
+    /* Login / Logout updates */
+    window.addEventListener(
+      "authUpdated",
+      loadTransactions
+    );
+
     return () => {
-      window.removeEventListener("storage", loadTransactions);
+      window.removeEventListener(
+        "storage",
+        loadTransactions
+      );
 
       window.removeEventListener(
         "transactionsUpdated",
+        loadTransactions
+      );
+
+      window.removeEventListener(
+        "authUpdated",
         loadTransactions
       );
     };
@@ -63,22 +124,28 @@ function Dashboard() {
 
   /* ================= STATS ================= */
 
-  const totalTransactions = transactions.length;
+  const totalTransactions =
+    transactions.length;
 
-  const safeTransactions = transactions.filter(
-    (transaction) => transaction.status === "Safe"
-  ).length;
+  const safeTransactions =
+    transactions.filter(
+      (transaction) =>
+        transaction.status === "Safe"
+    ).length;
 
-  const reviewTransactions = transactions.filter(
-    (transaction) => transaction.status === "Review"
-  ).length;
+  const reviewTransactions =
+    transactions.filter(
+      (transaction) =>
+        transaction.status === "Review"
+    ).length;
 
-  /* Risk Check entries created by Risk Checker */
-  const riskChecks = transactions.filter(
-    (transaction) =>
-      transaction.type === "Risk Check" ||
-      transaction.riskLevel
-  ).length;
+  /* Risk Check entries */
+  const riskChecks =
+    transactions.filter(
+      (transaction) =>
+        transaction.type === "Risk Check" ||
+        transaction.riskLevel
+    ).length;
 
   /* ================= SAFETY SCORE ================= */
 
@@ -90,7 +157,9 @@ function Dashboard() {
           Math.min(
             100,
             Math.round(
-              (safeTransactions / totalTransactions) * 100
+              (safeTransactions /
+                totalTransactions) *
+                100
             )
           )
         );
@@ -109,7 +178,8 @@ function Dashboard() {
 
   /* ================= RECENT TRANSACTIONS ================= */
 
-  const recentTransactions = transactions.slice(0, 5);
+  const recentTransactions =
+    transactions.slice(0, 5);
 
   return (
     <div className="dashboard-page">
@@ -119,22 +189,30 @@ function Dashboard() {
       <div className="page-header">
 
         <div>
-          <p className="page-label">OVERVIEW</p>
 
-          <h2>Payment Dashboard</h2>
+          <p className="page-label">
+            OVERVIEW
+          </p>
+
+          <h2>
+            Payment Dashboard
+          </h2>
 
           <p className="page-subtitle">
             Monitor your payment safety and recent activity.
           </p>
+
         </div>
 
         <div className="protection-badge">
+
           <span></span>
+
           Protection Active
+
         </div>
 
       </div>
-
 
       {/* ================= STAT CARDS ================= */}
 
@@ -145,33 +223,52 @@ function Dashboard() {
         <div className="dashboard-card">
 
           <div className="card-top">
-            <span>SAFETY SCORE</span>
+
+            <span>
+              SAFETY SCORE
+            </span>
+
             <ShieldCheck />
+
           </div>
 
           <h3>
+
             {safetyScore}
-            <span>/100</span>
+
+            <span>
+              /100
+            </span>
+
           </h3>
 
           <div className="stat-change positive">
+
             <TrendingUp size={14} />
+
             {safetyLevel}
+
           </div>
 
         </div>
-
 
         {/* TRANSACTIONS */}
 
         <div className="dashboard-card">
 
           <div className="card-top">
-            <span>TRANSACTIONS</span>
+
+            <span>
+              TRANSACTIONS
+            </span>
+
             <CreditCard />
+
           </div>
 
-          <h3>{totalTransactions}</h3>
+          <h3>
+            {totalTransactions}
+          </h3>
 
           <div className="stat-change">
             Total activity
@@ -179,48 +276,67 @@ function Dashboard() {
 
         </div>
 
-
         {/* RISK CHECKS */}
 
         <div className="dashboard-card">
 
           <div className="card-top">
-            <span>RISK CHECKS</span>
+
+            <span>
+              RISK CHECKS
+            </span>
+
             <Activity />
+
           </div>
 
-          <h3>{riskChecks}</h3>
+          <h3>
+            {riskChecks}
+          </h3>
 
           <div className="stat-change positive">
-            {safeTransactions} safe payments
+
+            {safeTransactions}
+            {" "}
+            safe payments
+
           </div>
 
         </div>
-
 
         {/* ALERTS / REVIEW */}
 
         <div className="dashboard-card warning-card">
 
           <div className="card-top">
-            <span>ALERTS</span>
+
+            <span>
+              ALERTS
+            </span>
+
             <AlertTriangle />
+
           </div>
 
           <h3>
-            {String(reviewTransactions).padStart(2, "0")}
+
+            {String(
+              reviewTransactions
+            ).padStart(2, "0")}
+
           </h3>
 
           <div className="stat-change warning">
+
             {reviewTransactions > 0
               ? "Review required"
               : "No issues detected"}
+
           </div>
 
         </div>
 
       </div>
-
 
       {/* ================= MAIN GRID ================= */}
 
@@ -233,38 +349,50 @@ function Dashboard() {
           <div className="panel-header">
 
             <div>
-              <p>SECURITY STATUS</p>
-              <h3>Your Safety Score</h3>
+
+              <p>
+                SECURITY STATUS
+              </p>
+
+              <h3>
+                Your Safety Score
+              </h3>
+
             </div>
 
             <ShieldCheck className="panel-icon" />
 
           </div>
 
-
           <div className="score-area">
 
             <div className="score-circle">
 
-              <strong>{safetyScore}</strong>
+              <strong>
+                {safetyScore}
+              </strong>
 
-              <span>/100</span>
+              <span>
+                /100
+              </span>
 
             </div>
 
-
             <div className="score-info">
 
-              <h4>{safetyLevel}</h4>
+              <h4>
+                {safetyLevel}
+              </h4>
 
               <p>
+
                 {safetyScore >= 80
                   ? "Your payment security is currently strong."
                   : safetyScore >= 60
                   ? "Your payment security is good, but review flagged payments."
                   : "Some transactions need your attention."}
-              </p>
 
+              </p>
 
               <div className="score-bar">
 
@@ -276,10 +404,15 @@ function Dashboard() {
 
               </div>
 
-
               <small>
-                Based on {totalTransactions} transaction
-                {totalTransactions !== 1 ? "s" : ""}
+
+                Based on{" "}
+                {totalTransactions}{" "}
+                transaction
+                {totalTransactions !== 1
+                  ? "s"
+                  : ""}
+
               </small>
 
             </div>
@@ -288,7 +421,6 @@ function Dashboard() {
 
         </div>
 
-
         {/* QUICK ACTIONS */}
 
         <div className="dashboard-panel">
@@ -296,12 +428,18 @@ function Dashboard() {
           <div className="panel-header">
 
             <div>
-              <p>QUICK ACTIONS</p>
-              <h3>Payment Protection</h3>
+
+              <p>
+                QUICK ACTIONS
+              </p>
+
+              <h3>
+                Payment Protection
+              </h3>
+
             </div>
 
           </div>
-
 
           <div className="quick-actions">
 
@@ -309,7 +447,9 @@ function Dashboard() {
 
             <button
               type="button"
-              onClick={() => navigate("/risk-checker")}
+              onClick={() =>
+                navigate("/risk-checker")
+              }
             >
 
               <div>
@@ -317,23 +457,26 @@ function Dashboard() {
               </div>
 
               <span>
+
                 Check Payment Risk
 
                 <small>
                   Analyze before paying
                 </small>
+
               </span>
 
               <ArrowUpRight />
 
             </button>
 
-
             {/* FRAUD ALERTS */}
 
             <button
               type="button"
-              onClick={() => navigate("/fraud-alerts")}
+              onClick={() =>
+                navigate("/fraud-alerts")
+              }
             >
 
               <div>
@@ -341,11 +484,13 @@ function Dashboard() {
               </div>
 
               <span>
+
                 View Fraud Alerts
 
                 <small>
                   See recent warnings
                 </small>
+
               </span>
 
               <ArrowUpRight />
@@ -358,7 +503,6 @@ function Dashboard() {
 
       </div>
 
-
       {/* ================= RECENT ACTIVITY ================= */}
 
       <div className="dashboard-panel recent-panel">
@@ -366,21 +510,28 @@ function Dashboard() {
         <div className="panel-header">
 
           <div>
-            <p>ACTIVITY</p>
-            <h3>Recent Transactions</h3>
-          </div>
 
+            <p>
+              ACTIVITY
+            </p>
+
+            <h3>
+              Recent Transactions
+            </h3>
+
+          </div>
 
           <button
             type="button"
             className="view-all"
-            onClick={() => navigate("/transactions")}
+            onClick={() =>
+              navigate("/transactions")
+            }
           >
             View all
           </button>
 
         </div>
-
 
         <div className="transaction-list">
 
@@ -390,7 +541,9 @@ function Dashboard() {
 
               <CreditCard size={28} />
 
-              <h4>No transactions yet</h4>
+              <h4>
+                No transactions yet
+              </h4>
 
               <p>
                 Run a payment risk check to start
@@ -399,7 +552,9 @@ function Dashboard() {
 
               <button
                 type="button"
-                onClick={() => navigate("/risk-checker")}
+                onClick={() =>
+                  navigate("/risk-checker")
+                }
               >
                 Check Payment Risk
               </button>
@@ -408,18 +563,30 @@ function Dashboard() {
 
           ) : (
 
-            recentTransactions.map((transaction) => (
+            recentTransactions.map(
+              (transaction) => (
 
-              <Transaction
-                key={transaction.id}
-                receiver={transaction.receiver}
-                type={transaction.type}
-                amount={transaction.amount}
-                status={transaction.status}
-                riskScore={transaction.riskScore}
-              />
+                <Transaction
+                  key={transaction.id}
+                  receiver={
+                    transaction.receiver
+                  }
+                  type={
+                    transaction.type
+                  }
+                  amount={
+                    transaction.amount
+                  }
+                  status={
+                    transaction.status
+                  }
+                  riskScore={
+                    transaction.riskScore
+                  }
+                />
 
-            ))
+              )
+            )
 
           )}
 
@@ -430,7 +597,6 @@ function Dashboard() {
     </div>
   );
 }
-
 
 /* ================= TRANSACTION COMPONENT ================= */
 
@@ -445,32 +611,41 @@ function Transaction({
     <div className="transaction-row">
 
       <div className="transaction-icon">
-        <CreditCard size={18} />
-      </div>
 
+        <CreditCard size={18} />
+
+      </div>
 
       <div className="transaction-name">
 
-        <strong>{receiver}</strong>
+        <strong>
+          {receiver || "Unknown Receiver"}
+        </strong>
 
         <span>
-          {type}
+
+          {type || "Payment"}
 
           {riskScore !== undefined && (
-            <> • Risk {riskScore}/100</>
+            <>
+              {" • Risk "}
+              {riskScore}
+              /100
+            </>
           )}
+
         </span>
 
       </div>
 
-
       <strong className="transaction-amount">
 
         ₹
-        {Number(amount || 0).toLocaleString("en-IN")}
+        {Number(
+          amount || 0
+        ).toLocaleString("en-IN")}
 
       </strong>
-
 
       <span
         className={
@@ -486,7 +661,7 @@ function Transaction({
           <AlertTriangle size={13} />
         )}
 
-        {status}
+        {status || "Review"}
 
       </span>
 

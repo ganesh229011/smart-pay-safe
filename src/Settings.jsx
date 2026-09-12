@@ -42,17 +42,12 @@ function Settings() {
     }
   };
 
-
   const [currentUser, setCurrentUser] = useState(
     getCurrentUser
   );
 
-
   /* =========================================================
      ORIGINAL ACCOUNT NAME
-     
-     This is the name created during registration.
-     Reset will always return to this name.
   ========================================================= */
 
   const getOriginalName = (user) => {
@@ -62,11 +57,6 @@ function Settings() {
     if (savedOriginalName) {
       return savedOriginalName;
     }
-
-    /*
-      If old user doesn't have original name stored,
-      use current account name once.
-    */
 
     const originalName =
       user?.name?.trim() || "User";
@@ -79,11 +69,9 @@ function Settings() {
     return originalName;
   };
 
-
   const [originalName] = useState(() => {
     return getOriginalName(getCurrentUser());
   });
-
 
   /* =========================================================
      DEFAULT SETTINGS
@@ -95,7 +83,6 @@ function Settings() {
     securityAlerts: true,
     darkMode: true,
   });
-
 
   /* =========================================================
      LOAD SAVED SETTINGS
@@ -125,21 +112,15 @@ function Settings() {
     }
   };
 
-
   /* =========================================================
      DRAFT SETTINGS
-     
-     These are temporary changes.
-     Nothing is permanently applied until Save.
   ========================================================= */
 
   const [settings, setSettings] = useState(
     getSavedSettings
   );
 
-
   const [saved, setSaved] = useState(false);
-
 
   /* =========================================================
      APPLY SAVED THEME WHEN PAGE LOADS
@@ -167,7 +148,6 @@ function Settings() {
     );
   }, []);
 
-
   /* =========================================================
      USER UPDATE LISTENER
   ========================================================= */
@@ -179,12 +159,10 @@ function Settings() {
       setCurrentUser(updatedUser);
     };
 
-
     window.addEventListener(
       "userUpdated",
       handleUserUpdate
     );
-
 
     return () => {
       window.removeEventListener(
@@ -194,13 +172,8 @@ function Settings() {
     };
   }, []);
 
-
   /* =========================================================
      UPDATE TEMPORARY SETTING
-     
-     IMPORTANT:
-     No localStorage update here.
-     No theme update here.
   ========================================================= */
 
   const updateSetting = (key, value) => {
@@ -212,27 +185,21 @@ function Settings() {
     setSaved(false);
   };
 
-
   /* =========================================================
      SAVE SETTINGS
-     
-     Only here settings become permanent.
   ========================================================= */
 
   const saveSettings = () => {
     const trimmedName =
       settings.displayName.trim();
 
-
     const finalName =
       trimmedName || originalName;
-
 
     const updatedSettings = {
       ...settings,
       displayName: finalName,
     };
-
 
     /* -----------------------------------------
        SAVE SETTINGS
@@ -243,7 +210,6 @@ function Settings() {
       JSON.stringify(updatedSettings)
     );
 
-
     /* -----------------------------------------
        UPDATE CURRENT USER
     ----------------------------------------- */
@@ -253,12 +219,10 @@ function Settings() {
       name: finalName,
     };
 
-
     localStorage.setItem(
       "smartPayCurrentUser",
       JSON.stringify(updatedUser)
     );
-
 
     /* -----------------------------------------
        UPDATE REACT STATE
@@ -266,7 +230,6 @@ function Settings() {
 
     setCurrentUser(updatedUser);
     setSettings(updatedSettings);
-
 
     /* -----------------------------------------
        APPLY THEME
@@ -276,7 +239,6 @@ function Settings() {
       "light-mode",
       !updatedSettings.darkMode
     );
-
 
     /* -----------------------------------------
        NOTIFY APP.JSX
@@ -290,28 +252,19 @@ function Settings() {
       new Event("userUpdated")
     );
 
-
     /* -----------------------------------------
        SUCCESS MESSAGE
     ----------------------------------------- */
 
     setSaved(true);
 
-
     setTimeout(() => {
       setSaved(false);
     }, 2500);
   };
 
-
   /* =========================================================
      RESET SETTINGS
-     
-     Reset means:
-     - Original registered name
-     - Notifications ON
-     - Security alerts ON
-     - Dark mode ON
   ========================================================= */
 
   const resetSettings = () => {
@@ -319,17 +272,9 @@ function Settings() {
       "Are you sure you want to reset all SmartPay-Safe settings to their default values?"
     );
 
-
-    /* -----------------------------------------
-       CANCEL
-       
-       Do absolutely nothing.
-    ----------------------------------------- */
-
     if (!confirmed) {
       return;
     }
-
 
     /* -----------------------------------------
        DEFAULT DATA
@@ -342,13 +287,11 @@ function Settings() {
       darkMode: true,
     };
 
-
     /* -----------------------------------------
        RESET SETTINGS STATE
     ----------------------------------------- */
 
     setSettings(resetData);
-
 
     /* -----------------------------------------
        SAVE RESET SETTINGS
@@ -359,7 +302,6 @@ function Settings() {
       JSON.stringify(resetData)
     );
 
-
     /* -----------------------------------------
        RESET PROFILE NAME
     ----------------------------------------- */
@@ -369,15 +311,12 @@ function Settings() {
       name: originalName,
     };
 
-
     setCurrentUser(resetUser);
-
 
     localStorage.setItem(
       "smartPayCurrentUser",
       JSON.stringify(resetUser)
     );
-
 
     /* -----------------------------------------
        APPLY DARK MODE
@@ -386,7 +325,6 @@ function Settings() {
     document.body.classList.remove(
       "light-mode"
     );
-
 
     /* -----------------------------------------
        NOTIFY APP.JSX
@@ -400,22 +338,19 @@ function Settings() {
       new Event("userUpdated")
     );
 
-
     /* -----------------------------------------
        SUCCESS MESSAGE
     ----------------------------------------- */
 
     setSaved(true);
 
-
     setTimeout(() => {
       setSaved(false);
     }, 2500);
   };
 
-
   /* =========================================================
-     CLEAR TRANSACTION HISTORY
+     CLEAR USER-SPECIFIC TRANSACTION HISTORY
   ========================================================= */
 
   const clearTransactionHistory = () => {
@@ -423,27 +358,60 @@ function Settings() {
       "Are you sure you want to clear your transaction history?"
     );
 
-
     if (!confirmed) {
       return;
     }
 
+    /* -----------------------------------------
+       GET CURRENT USER
+    ----------------------------------------- */
+
+    const user = getCurrentUser();
+
+    if (!user?.email) {
+      alert(
+        "Unable to identify your account. Please login again."
+      );
+
+      return;
+    }
+
+    /* -----------------------------------------
+       USER-SPECIFIC STORAGE KEY
+
+       Same key used by:
+       - Dashboard
+       - Transactions
+       - RiskChecker
+    ----------------------------------------- */
+
+    const transactionStorageKey =
+      `smartPayTransactions_${user.email}`;
+
+    /* -----------------------------------------
+       CLEAR ONLY CURRENT USER HISTORY
+    ----------------------------------------- */
 
     localStorage.removeItem(
-      "smartPayTransactions"
+      transactionStorageKey
     );
 
+    /* -----------------------------------------
+       UPDATE OTHER COMPONENTS
+    ----------------------------------------- */
 
     window.dispatchEvent(
       new Event("transactionsUpdated")
     );
 
+    /* -----------------------------------------
+       SUCCESS MESSAGE
+    ----------------------------------------- */
 
     alert(
       "Transaction history cleared successfully."
     );
   };
-
 
   return (
     <>
@@ -474,7 +442,6 @@ function Settings() {
 
           </div>
 
-
           {saved && (
             <div className="settings-saved-modern">
 
@@ -486,7 +453,6 @@ function Settings() {
           )}
 
         </div>
-
 
         {/* ================= PROFILE ================= */}
 
@@ -512,7 +478,6 @@ function Settings() {
 
           </div>
 
-
           <div className="profile-modern-box">
 
             <div className="profile-modern-avatar">
@@ -523,13 +488,11 @@ function Settings() {
 
             </div>
 
-
             <div className="profile-modern-form">
 
               <label>
                 Display Name
               </label>
-
 
               <div className="modern-input-wrapper">
 
@@ -549,12 +512,10 @@ function Settings() {
 
               </div>
 
-
               <small>
                 Changes will be applied only after
                 clicking Save Changes.
               </small>
-
 
               {currentUser.email && (
                 <div className="profile-email">
@@ -573,7 +534,6 @@ function Settings() {
           </div>
 
         </section>
-
 
         {/* ================= NOTIFICATIONS ================= */}
 
@@ -599,7 +559,6 @@ function Settings() {
 
           </div>
 
-
           <div className="modern-settings-list">
 
             {/* PAYMENT NOTIFICATIONS */}
@@ -609,7 +568,6 @@ function Settings() {
               <div className="modern-row-icon">
                 <Bell size={19} />
               </div>
-
 
               <div className="modern-row-content">
 
@@ -622,7 +580,6 @@ function Settings() {
                 </span>
 
               </div>
-
 
               <button
                 type="button"
@@ -646,7 +603,6 @@ function Settings() {
 
             </div>
 
-
             {/* SECURITY ALERTS */}
 
             <div className="modern-setting-row">
@@ -654,7 +610,6 @@ function Settings() {
               <div className="modern-row-icon">
                 <ShieldCheck size={19} />
               </div>
-
 
               <div className="modern-row-content">
 
@@ -667,7 +622,6 @@ function Settings() {
                 </span>
 
               </div>
-
 
               <button
                 type="button"
@@ -695,7 +649,6 @@ function Settings() {
 
         </section>
 
-
         {/* ================= SECURITY ================= */}
 
         <section className="settings-modern-card">
@@ -720,7 +673,6 @@ function Settings() {
 
           </div>
 
-
           <div className="modern-settings-list">
 
             {/* PROTECTION STATUS */}
@@ -730,7 +682,6 @@ function Settings() {
               <div className="modern-row-icon">
                 <ShieldCheck size={19} />
               </div>
-
 
               <div className="modern-row-content">
 
@@ -744,7 +695,6 @@ function Settings() {
 
               </div>
 
-
               <div className="modern-status active-status">
 
                 <CheckCircle2 size={15} />
@@ -754,7 +704,6 @@ function Settings() {
               </div>
 
             </div>
-
 
             {/* DARK MODE */}
 
@@ -770,7 +719,6 @@ function Settings() {
 
               </div>
 
-
               <div className="modern-row-content">
 
                 <strong>
@@ -785,7 +733,6 @@ function Settings() {
                 </span>
 
               </div>
-
 
               <button
                 type="button"
@@ -813,7 +760,6 @@ function Settings() {
 
         </section>
 
-
         {/* ================= PRIVACY ================= */}
 
         <section className="settings-modern-card">
@@ -838,7 +784,6 @@ function Settings() {
 
           </div>
 
-
           <div className="modern-settings-list">
 
             {/* LOCAL STORAGE */}
@@ -848,7 +793,6 @@ function Settings() {
               <div className="modern-row-icon">
                 <Database size={19} />
               </div>
-
 
               <div className="modern-row-content">
 
@@ -863,7 +807,6 @@ function Settings() {
 
               </div>
 
-
               <div className="modern-status active-status">
 
                 <CheckCircle2 size={15} />
@@ -874,7 +817,6 @@ function Settings() {
 
             </div>
 
-
             {/* CLEAR HISTORY */}
 
             <div className="modern-setting-row">
@@ -882,7 +824,6 @@ function Settings() {
               <div className="modern-row-icon danger-icon">
                 <Trash2 size={19} />
               </div>
-
 
               <div className="modern-row-content">
 
@@ -896,7 +837,6 @@ function Settings() {
                 </span>
 
               </div>
-
 
               <button
                 type="button"
@@ -916,7 +856,6 @@ function Settings() {
 
         </section>
 
-
         {/* ================= SECURITY INFO ================= */}
 
         <div className="modern-security-banner">
@@ -924,7 +863,6 @@ function Settings() {
           <div className="modern-security-banner-icon">
             <ShieldCheck size={22} />
           </div>
-
 
           <div>
 
@@ -939,14 +877,12 @@ function Settings() {
 
           </div>
 
-
           <CheckCircle2
             size={22}
             className="banner-check"
           />
 
         </div>
-
 
         {/* ================= ACTIONS ================= */}
 
@@ -964,7 +900,6 @@ function Settings() {
 
           </button>
 
-
           <button
             type="button"
             className="modern-save-btn"
@@ -981,7 +916,6 @@ function Settings() {
 
       </div>
 
-
       {/* =====================================================
           SETTINGS PAGE CSS
       ===================================================== */}
@@ -995,7 +929,6 @@ function Settings() {
           padding: 42px 34px 70px;
           box-sizing: border-box;
         }
-
 
         /* ================= HEADER ================= */
 
@@ -1043,7 +976,6 @@ function Settings() {
           white-space: nowrap;
         }
 
-
         /* ================= CARD ================= */
 
         .settings-modern-card {
@@ -1061,7 +993,6 @@ function Settings() {
           box-shadow:
             0 15px 40px rgba(0, 0, 0, 0.12);
         }
-
 
         /* ================= CARD HEADER ================= */
 
@@ -1115,7 +1046,6 @@ function Settings() {
           color: #7186a5;
           font-size: 13px;
         }
-
 
         /* ================= PROFILE ================= */
 
@@ -1216,7 +1146,6 @@ function Settings() {
           color: #4aa9d1;
         }
 
-
         /* ================= SETTINGS ROWS ================= */
 
         .modern-settings-list {
@@ -1270,7 +1199,6 @@ function Settings() {
           line-height: 1.5;
         }
 
-
         /* ================= TOGGLE ================= */
 
         .modern-toggle {
@@ -1310,7 +1238,6 @@ function Settings() {
           transform: scale(1.03);
         }
 
-
         /* ================= STATUS ================= */
 
         .modern-status {
@@ -1329,7 +1256,6 @@ function Settings() {
           border: 1px solid rgba(34, 211, 238, 0.22);
           background: rgba(34, 211, 238, 0.06);
         }
-
 
         /* ================= CLEAR BUTTON ================= */
 
@@ -1357,7 +1283,6 @@ function Settings() {
           background: rgba(244, 63, 94, 0.12);
           border-color: rgba(244, 63, 94, 0.45);
         }
-
 
         /* ================= SECURITY BANNER ================= */
 
@@ -1408,7 +1333,6 @@ function Settings() {
           color: #22c55e;
           flex-shrink: 0;
         }
-
 
         /* ================= ACTIONS ================= */
 
@@ -1462,7 +1386,6 @@ function Settings() {
           box-shadow:
             0 10px 24px rgba(8, 127, 158, 0.3);
         }
-
 
         /* ================= LIGHT MODE ================= */
 
@@ -1543,7 +1466,6 @@ function Settings() {
           color: #667085;
         }
 
-
         /* ================= RESPONSIVE ================= */
 
         @media (max-width: 800px) {
@@ -1570,7 +1492,6 @@ function Settings() {
           }
 
         }
-
 
         @media (max-width: 600px) {
 

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ShieldCheck,
   LockKeyhole,
@@ -16,6 +16,136 @@ import {
 function SafetyCenter() {
   const [openTip, setOpenTip] = useState(null);
   const [search, setSearch] = useState("");
+  const [safetyScore, setSafetyScore] = useState(92);
+
+  /* ================= CURRENT USER ================= */
+
+  const getCurrentUser = () => {
+    const savedUser = localStorage.getItem(
+      "smartPayCurrentUser"
+    );
+
+    if (!savedUser) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(savedUser);
+    } catch {
+      return null;
+    }
+  };
+
+  /* ================= USER TRANSACTION KEY ================= */
+
+  const getTransactionStorageKey = () => {
+    const currentUser = getCurrentUser();
+
+    if (!currentUser?.email) {
+      return null;
+    }
+
+    return `smartPayTransactions_${currentUser.email}`;
+  };
+
+  /* ================= CALCULATE SAFETY SCORE ================= */
+
+  useEffect(() => {
+    const calculateSafetyScore = () => {
+      const storageKey =
+        getTransactionStorageKey();
+
+      if (!storageKey) {
+        setSafetyScore(92);
+        return;
+      }
+
+      const saved =
+        localStorage.getItem(storageKey);
+
+      if (!saved) {
+        setSafetyScore(92);
+        return;
+      }
+
+      try {
+        const transactions =
+          JSON.parse(saved);
+
+        if (
+          !Array.isArray(transactions) ||
+          transactions.length === 0
+        ) {
+          setSafetyScore(92);
+          return;
+        }
+
+        const safeTransactions =
+          transactions.filter(
+            (transaction) =>
+              transaction.status === "Safe"
+          ).length;
+
+        const score = Math.max(
+          0,
+          Math.min(
+            100,
+            Math.round(
+              (safeTransactions /
+                transactions.length) *
+                100
+            )
+          )
+        );
+
+        setSafetyScore(score);
+      } catch (error) {
+        console.error(
+          "Failed to calculate safety score:",
+          error
+        );
+
+        setSafetyScore(92);
+      }
+    };
+
+    calculateSafetyScore();
+
+    /* Update after Risk Checker */
+    window.addEventListener(
+      "transactionsUpdated",
+      calculateSafetyScore
+    );
+
+    /* Update after login/logout */
+    window.addEventListener(
+      "authUpdated",
+      calculateSafetyScore
+    );
+
+    /* Update from another tab */
+    window.addEventListener(
+      "storage",
+      calculateSafetyScore
+    );
+
+    return () => {
+      window.removeEventListener(
+        "transactionsUpdated",
+        calculateSafetyScore
+      );
+
+      window.removeEventListener(
+        "authUpdated",
+        calculateSafetyScore
+      );
+
+      window.removeEventListener(
+        "storage",
+        calculateSafetyScore
+      );
+    };
+  }, []);
 
   /* ================= SAFETY TIPS ================= */
 
@@ -86,14 +216,17 @@ function SafetyCenter() {
 
   const toggleTip = (id) => {
     setOpenTip((currentId) =>
-      currentId === id ? null : id
+      currentId === id
+        ? null
+        : id
     );
   };
 
   /* ================= FILTER TIPS ================= */
 
   const filteredTips = useMemo(() => {
-    const searchText = search.trim().toLowerCase();
+    const searchText =
+      search.trim().toLowerCase();
 
     if (!searchText) {
       return safetyTips;
@@ -101,10 +234,18 @@ function SafetyCenter() {
 
     return safetyTips.filter((tip) => {
       return (
-        tip.title.toLowerCase().includes(searchText) ||
-        tip.category.toLowerCase().includes(searchText) ||
-        tip.text.toLowerCase().includes(searchText) ||
-        tip.action.toLowerCase().includes(searchText)
+        tip.title
+          .toLowerCase()
+          .includes(searchText) ||
+        tip.category
+          .toLowerCase()
+          .includes(searchText) ||
+        tip.text
+          .toLowerCase()
+          .includes(searchText) ||
+        tip.action
+          .toLowerCase()
+          .includes(searchText)
       );
     });
   }, [search]);
@@ -117,32 +258,42 @@ function SafetyCenter() {
       <div className="page-heading">
 
         <div>
+
           <p className="section-label">
             PROTECTION GUIDE
           </p>
 
-          <h2>Safety Center</h2>
+          <h2>
+            Safety Center
+          </h2>
 
           <p className="page-description">
             Simple security practices to keep your digital
             payments safe.
           </p>
+
         </div>
 
         <div className="safety-badge">
+
           <ShieldCheck size={20} />
-          <span>Security Enabled</span>
+
+          <span>
+            Security Enabled
+          </span>
+
         </div>
 
       </div>
-
 
       {/* ================= HERO ================= */}
 
       <div className="safety-hero">
 
         <div className="safety-hero-icon">
+
           <ShieldCheck size={34} />
+
         </div>
 
         <div className="safety-hero-content">
@@ -161,20 +312,31 @@ function SafetyCenter() {
 
         <div className="safety-score">
 
-          <span>SAFETY SCORE</span>
+          <span>
+            SAFETY SCORE
+          </span>
 
-          <strong>92</strong>
+          <strong>
+            {safetyScore}
+          </strong>
 
-          <small>/100</small>
+          <small>
+            /100
+          </small>
 
           <div className="safety-progress">
-            <div></div>
+
+            <div
+              style={{
+                width: `${safetyScore}%`,
+              }}
+            ></div>
+
           </div>
 
         </div>
 
       </div>
-
 
       {/* ================= INFO CARDS ================= */}
 
@@ -183,7 +345,9 @@ function SafetyCenter() {
         <div className="safety-info-card">
 
           <div className="info-icon">
+
             <ShieldCheck size={22} />
+
           </div>
 
           <h3>
@@ -196,17 +360,23 @@ function SafetyCenter() {
           </p>
 
           <div className="check-line">
+
             <CheckCircle2 size={16} />
-            <span>Keep credentials private</span>
+
+            <span>
+              Keep credentials private
+            </span>
+
           </div>
 
         </div>
 
-
         <div className="safety-info-card">
 
           <div className="info-icon">
+
             <LockKeyhole size={22} />
+
           </div>
 
           <h3>
@@ -219,20 +389,25 @@ function SafetyCenter() {
           </p>
 
           <div className="check-line">
+
             <CheckCircle2 size={16} />
-            <span>Review every payment</span>
+
+            <span>
+              Review every payment
+            </span>
+
           </div>
 
         </div>
 
       </div>
 
-
       {/* ================= CHECKLIST HEADER ================= */}
 
       <div className="safety-section-title">
 
         <div>
+
           <p className="section-label">
             SECURITY CHECKLIST
           </p>
@@ -240,14 +415,15 @@ function SafetyCenter() {
           <h3>
             Essential Safety Tips
           </h3>
+
         </div>
 
         <span>
-          {filteredTips.length} of {safetyTips.length}
+          {filteredTips.length} of{" "}
+          {safetyTips.length}
         </span>
 
       </div>
-
 
       {/* ================= SEARCH ================= */}
 
@@ -266,7 +442,6 @@ function SafetyCenter() {
         />
 
       </div>
-
 
       {/* ================= TIPS ================= */}
 
@@ -288,7 +463,9 @@ function SafetyCenter() {
 
             <button
               type="button"
-              onClick={() => setSearch("")}
+              onClick={() =>
+                setSearch("")
+              }
             >
               Clear Search
             </button>
@@ -300,12 +477,16 @@ function SafetyCenter() {
           filteredTips.map((tip) => {
 
             const Icon = tip.icon;
-            const isOpen = openTip === tip.id;
+
+            const isOpen =
+              openTip === tip.id;
 
             return (
               <div
                 className={`safety-tip ${
-                  isOpen ? "safety-tip-open" : ""
+                  isOpen
+                    ? "safety-tip-open"
+                    : ""
                 }`}
                 key={tip.id}
               >
@@ -320,9 +501,10 @@ function SafetyCenter() {
                 >
 
                   <div className="tip-icon">
-                    <Icon size={20} />
-                  </div>
 
+                    <Icon size={20} />
+
+                  </div>
 
                   <div className="tip-content">
 
@@ -338,15 +520,16 @@ function SafetyCenter() {
 
                     </div>
 
-
                     <p>
+
                       {isOpen
                         ? tip.text
                         : "Click to view the recommended security practice."}
+
                     </p>
 
-
                     {isOpen && (
+
                       <div className="tip-action">
 
                         <CheckCircle2 size={15} />
@@ -356,10 +539,10 @@ function SafetyCenter() {
                         </span>
 
                       </div>
+
                     )}
 
                   </div>
-
 
                   <ChevronDown
                     size={19}
@@ -380,13 +563,14 @@ function SafetyCenter() {
 
       </div>
 
-
       {/* ================= EMERGENCY ================= */}
 
       <div className="emergency-card">
 
         <div className="emergency-icon">
+
           <AlertTriangle size={23} />
+
         </div>
 
         <div>
