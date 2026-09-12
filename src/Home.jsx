@@ -34,23 +34,23 @@ function Home() {
       >
 
         {/* =====================================================
-            LARGE S LOGO BACKGROUND
+            LARGE S LOGO BACKGROUND WATERMARK
         ===================================================== */}
 
         <div
           aria-hidden="true"
           style={{
             position: "absolute",
-            width: "570px",
-            height: "570px",
-            left: "43%",
-            top: "50%",
+            width: "640px",
+            height: "640px",
+            left: "52%",
+            top: "52%",
             transform: "translate(-50%, -50%)",
-            opacity: 0.13,
+            opacity: 0.08,
             pointerEvents: "none",
             zIndex: 0,
             filter:
-              "drop-shadow(0 0 35px rgba(34, 211, 238, 0.35))",
+              "drop-shadow(0 0 40px rgba(34, 211, 238, 0.28))",
           }}
         >
           <img
@@ -153,6 +153,8 @@ function Home() {
 
           <div className="payment-card">
 
+            {/* PAYMENT HEADER */}
+
             <div className="payment-header">
 
               <div className="payment-brand">
@@ -162,6 +164,7 @@ function Home() {
                 </div>
 
                 <div>
+
                   <p>
                     SMART PAY-SAFE
                   </p>
@@ -169,6 +172,7 @@ function Home() {
                   <h3>
                     Payment Monitor
                   </h3>
+
                 </div>
 
               </div>
@@ -178,6 +182,8 @@ function Home() {
               </div>
 
             </div>
+
+            {/* BALANCE */}
 
             <div className="balance-box">
 
@@ -202,6 +208,8 @@ function Home() {
               </div>
 
             </div>
+
+            {/* RISK SCORE */}
 
             <div className="risk-box">
 
@@ -233,9 +241,13 @@ function Home() {
 
             </div>
 
+            {/* RISK PROGRESS */}
+
             <div className="risk-progress">
               <div></div>
             </div>
+
+            {/* RECEIVER */}
 
             <div className="payment-detail">
 
@@ -249,6 +261,8 @@ function Home() {
 
             </div>
 
+            {/* AMOUNT */}
+
             <div className="payment-detail">
 
               <span>
@@ -260,6 +274,8 @@ function Home() {
               </strong>
 
             </div>
+
+            {/* SAFE MESSAGE */}
 
             <div className="safe-message">
 
@@ -281,10 +297,13 @@ function Home() {
 
             </div>
 
+            {/* MINI STATS */}
+
             <div className="payment-mini-stats">
 
               <div>
                 <Smartphone size={16} />
+
                 <span>
                   Digital
                 </span>
@@ -292,6 +311,7 @@ function Home() {
 
               <div>
                 <CreditCard size={16} />
+
                 <span>
                   Secure
                 </span>
@@ -299,6 +319,7 @@ function Home() {
 
               <div>
                 <ShieldAlert size={16} />
+
                 <span>
                   Monitored
                 </span>
