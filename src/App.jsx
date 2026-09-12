@@ -21,26 +21,18 @@ import Register from "./Register";
 
 import smartPayLogo from "./assets/smartpay-logo.png";
 
+
 import "./App.css";
 
 function AppContent() {
   const navigate = useNavigate();
 
-  /* ================= LOGIN STATE ================= */
-
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return Boolean(
-      localStorage.getItem("smartPayToken")
-    );
+    return Boolean(localStorage.getItem("smartPayToken"));
   });
 
-  /* ================= CURRENT USER ================= */
-
   const getCurrentUser = () => {
-    const savedUser =
-      localStorage.getItem(
-        "smartPayCurrentUser"
-      );
+    const savedUser = localStorage.getItem("smartPayCurrentUser");
 
     if (!savedUser) {
       return {
@@ -62,13 +54,9 @@ function AppContent() {
   const [currentUser, setCurrentUser] =
     useState(getCurrentUser);
 
-  /* ================= THEME ================= */
-
   const [darkMode, setDarkMode] = useState(() => {
     const savedSettings =
-      localStorage.getItem(
-        "smartPaySettings"
-      );
+      localStorage.getItem("smartPaySettings");
 
     if (savedSettings) {
       try {
@@ -84,8 +72,6 @@ function AppContent() {
     return true;
   });
 
-  /* ================= APPLY THEME ================= */
-
   useEffect(() => {
     document.body.classList.toggle(
       "light-mode",
@@ -93,14 +79,10 @@ function AppContent() {
     );
   }, [darkMode]);
 
-  /* ================= THEME UPDATE ================= */
-
   useEffect(() => {
     const handleThemeUpdate = () => {
       const savedSettings =
-        localStorage.getItem(
-          "smartPaySettings"
-        );
+        localStorage.getItem("smartPaySettings");
 
       if (!savedSettings) {
         setDarkMode(true);
@@ -132,14 +114,9 @@ function AppContent() {
     };
   }, []);
 
-  /* ================= USER UPDATE ================= */
-
   useEffect(() => {
     const handleUserUpdate = () => {
-      const updatedUser =
-        getCurrentUser();
-
-      setCurrentUser(updatedUser);
+      setCurrentUser(getCurrentUser());
     };
 
     window.addEventListener(
@@ -155,22 +132,13 @@ function AppContent() {
     };
   }, []);
 
-  /* ================= LOGIN / LOGOUT UPDATE ================= */
-
   useEffect(() => {
     const handleAuthUpdate = () => {
       const token =
-        localStorage.getItem(
-          "smartPayToken"
-        );
+        localStorage.getItem("smartPayToken");
 
-      setIsLoggedIn(
-        Boolean(token)
-      );
-
-      setCurrentUser(
-        getCurrentUser()
-      );
+      setIsLoggedIn(Boolean(token));
+      setCurrentUser(getCurrentUser());
     };
 
     window.addEventListener(
@@ -186,20 +154,10 @@ function AppContent() {
     };
   }, []);
 
-  /* ================= LOGOUT ================= */
-
   const handleLogout = () => {
-    localStorage.removeItem(
-      "smartPayToken"
-    );
-
-    localStorage.removeItem(
-      "smartPayCurrentUser"
-    );
-
-    localStorage.removeItem(
-      "smartPayLoggedIn"
-    );
+    localStorage.removeItem("smartPayToken");
+    localStorage.removeItem("smartPayCurrentUser");
+    localStorage.removeItem("smartPayLoggedIn");
 
     setIsLoggedIn(false);
 
@@ -221,54 +179,49 @@ function AppContent() {
     });
   };
 
-  /* ================= MENU ================= */
-
   const menuItems = [
     {
       path: "/",
       name: "Home",
       icon: "⌂",
     },
-
     {
       path: "/dashboard",
       name: "Dashboard",
       icon: "▣",
     },
-
     {
       path: "/risk-checker",
       name: "Risk Checker",
-      icon: "🛡",
+      icon: "◈",
     },
-
     {
       path: "/transactions",
       name: "Transactions",
-      icon: "💳",
+      icon: "▤",
     },
-
     {
       path: "/fraud-alerts",
       name: "Fraud Alerts",
-      icon: "⚠",
+      icon: "△",
     },
-
     {
       path: "/safety-center",
       name: "Safety Center",
-      icon: "📚",
+      icon: "◇",
     },
   ];
 
   return (
     <div className="app">
 
-      {/* ================= SIDEBAR ================= */}
+      {/* =================================================
+          SIDEBAR
+      ================================================= */}
 
       <aside className="sidebar">
 
-        {/* ================= SMART PAY-SAFE BRAND ================= */}
+        {/* MAIN WEBSITE LOGO */}
 
         <div className="logo">
 
@@ -281,8 +234,7 @@ function AppContent() {
           <div className="logo-text">
 
             <h2>
-              Smart
-              <span>Pay</span>
+              Smart<span>Pay</span>
             </h2>
 
             <p>
@@ -293,7 +245,7 @@ function AppContent() {
 
         </div>
 
-        {/* ================= MAIN MENU ================= */}
+        {/* MAIN MENU */}
 
         <nav className="navigation">
 
@@ -311,7 +263,6 @@ function AppContent() {
                   : "nav-item"
               }
             >
-
               <span className="nav-icon">
                 {item.icon}
               </span>
@@ -319,13 +270,12 @@ function AppContent() {
               <span>
                 {item.name}
               </span>
-
             </NavLink>
           ))}
 
         </nav>
 
-        {/* ================= ACCOUNT ================= */}
+        {/* ACCOUNT */}
 
         <div className="sidebar-bottom">
 
@@ -335,7 +285,6 @@ function AppContent() {
 
           {isLoggedIn ? (
             <>
-
               <NavLink
                 to="/settings"
                 className={({ isActive }) =>
@@ -344,7 +293,6 @@ function AppContent() {
                     : "nav-item"
                 }
               >
-
                 <span className="nav-icon">
                   ⚙
                 </span>
@@ -352,7 +300,6 @@ function AppContent() {
                 <span>
                   Settings
                 </span>
-
               </NavLink>
 
               <button
@@ -360,7 +307,6 @@ function AppContent() {
                 className="nav-item logout-btn"
                 onClick={handleLogout}
               >
-
                 <span className="nav-icon">
                   ↪
                 </span>
@@ -368,17 +314,13 @@ function AppContent() {
                 <span>
                   Logout
                 </span>
-
               </button>
-
             </>
           ) : (
-
             <NavLink
               to="/login"
               className="nav-item"
             >
-
               <span className="nav-icon">
                 ↪
               </span>
@@ -386,24 +328,24 @@ function AppContent() {
               <span>
                 Login
               </span>
-
             </NavLink>
-
           )}
 
         </div>
 
       </aside>
 
-      {/* ================= MAIN ================= */}
+      {/* =================================================
+          MAIN CONTENT
+      ================================================= */}
 
       <main className="main">
 
-        {/* ================= TOPBAR ================= */}
+        {/* TOP HEADER */}
 
         <header className="topbar">
 
-          <div>
+          <div className="topbar-title">
 
             <p className="small-text">
               SMART PAY-SAFE
@@ -413,19 +355,20 @@ function AppContent() {
               Digital Payment Protection
             </h1>
 
+            <span className="topbar-subtitle">
+              Check. Analyze. Pay Safe.
+            </span>
+
           </div>
 
           {isLoggedIn && (
-
             <div className="profile">
 
               <button
                 type="button"
                 className="notification"
                 onClick={() =>
-                  alert(
-                    "No new notifications"
-                  )
+                  alert("No new notifications")
                 }
                 aria-label="Notifications"
               >
@@ -433,11 +376,9 @@ function AppContent() {
               </button>
 
               <div className="avatar">
-
                 {currentUser.name
                   ?.charAt(0)
                   .toUpperCase() || "U"}
-
               </div>
 
               <div className="profile-info">
@@ -453,16 +394,13 @@ function AppContent() {
               </div>
 
             </div>
-
           )}
 
         </header>
 
-        {/* ================= ROUTES ================= */}
+        {/* ROUTES */}
 
         <Routes>
-
-          {/* LOGIN */}
 
           <Route
             path="/login"
@@ -478,8 +416,6 @@ function AppContent() {
             }
           />
 
-          {/* REGISTER */}
-
           <Route
             path="/register"
             element={
@@ -494,14 +430,10 @@ function AppContent() {
             }
           />
 
-          {/* HOME */}
-
           <Route
             path="/"
             element={<Home />}
           />
-
-          {/* DASHBOARD */}
 
           <Route
             path="/dashboard"
@@ -517,8 +449,6 @@ function AppContent() {
             }
           />
 
-          {/* RISK CHECKER */}
-
           <Route
             path="/risk-checker"
             element={
@@ -532,8 +462,6 @@ function AppContent() {
               )
             }
           />
-
-          {/* TRANSACTIONS */}
 
           <Route
             path="/transactions"
@@ -549,8 +477,6 @@ function AppContent() {
             }
           />
 
-          {/* FRAUD ALERTS */}
-
           <Route
             path="/fraud-alerts"
             element={
@@ -564,8 +490,6 @@ function AppContent() {
               )
             }
           />
-
-          {/* SAFETY CENTER */}
 
           <Route
             path="/safety-center"
@@ -581,8 +505,6 @@ function AppContent() {
             }
           />
 
-          {/* SETTINGS */}
-
           <Route
             path="/settings"
             element={
@@ -596,8 +518,6 @@ function AppContent() {
               )
             }
           />
-
-          {/* UNKNOWN ROUTE */}
 
           <Route
             path="*"
@@ -616,8 +536,6 @@ function AppContent() {
     </div>
   );
 }
-
-/* ================= APP ================= */
 
 function App() {
   return (
