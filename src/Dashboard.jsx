@@ -13,111 +13,94 @@ function Dashboard() {
   const navigate = useNavigate();
 
   const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  /* ================= CURRENT USER ================= */
+  /* ================= LOAD TRANSACTIONS FROM MONGODB ================= */
 
-  const getCurrentUser = () => {
-    const savedUser = localStorage.getItem(
-      "smartPayCurrentUser"
-    );
+  const loadTransactions = async () => {
+    const token =
+      localStorage.getItem("smartPayToken");
 
-    if (!savedUser) {
-      return null;
+    if (!token) {
+      setTransactions([]);
+      setLoading(false);
+      return;
     }
 
     try {
-      return JSON.parse(savedUser);
-    } catch {
-      return null;
-    }
-  };
-
-  /* ================= USER TRANSACTION KEY ================= */
-
-  const getTransactionStorageKey = () => {
-    const currentUser = getCurrentUser();
-
-    if (!currentUser?.email) {
-      return null;
-    }
-
-    return `smartPayTransactions_${currentUser.email}`;
-  };
-
-  /* ================= LOAD TRANSACTIONS ================= */
-
-  useEffect(() => {
-    const loadTransactions = () => {
-      const storageKey =
-        getTransactionStorageKey();
-
-      if (!storageKey) {
-        setTransactions([]);
-        return;
-      }
-
-      const saved =
-        localStorage.getItem(storageKey);
-
-      if (!saved) {
-        setTransactions([]);
-        return;
-      }
-
-      try {
-        const parsedTransactions =
-          JSON.parse(saved);
-
-        if (Array.isArray(parsedTransactions)) {
-          setTransactions(parsedTransactions);
-        } else {
-          setTransactions([]);
+      const response = await fetch(
+        "https://smart-pay-safe.onrender.com/api/transactions",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      } catch (error) {
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
         console.error(
-          "Failed to load transactions:",
-          error
+          "Dashboard transaction fetch failed:",
+          data
         );
 
         setTransactions([]);
+        return;
       }
-    };
 
-    /* Initial load */
+      if (Array.isArray(data.transactions)) {
+        setTransactions(data.transactions);
+      } else {
+        setTransactions([]);
+      }
+    } catch (error) {
+      console.error(
+        "Dashboard transaction API error:",
+        error
+      );
+
+      setTransactions([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* ================= INITIAL LOAD ================= */
+
+  useEffect(() => {
     loadTransactions();
 
-    /* Browser tab/storage updates */
-    window.addEventListener(
-      "storage",
-      loadTransactions
-    );
+    /* Refresh after Risk Checker saves transaction */
+    const handleTransactionUpdate = () => {
+      loadTransactions();
+    };
 
-    /* Risk Checker updates */
+    /* Refresh after login/logout */
+    const handleAuthUpdate = () => {
+      loadTransactions();
+    };
+
     window.addEventListener(
       "transactionsUpdated",
-      loadTransactions
+      handleTransactionUpdate
     );
 
-    /* Login / Logout updates */
     window.addEventListener(
       "authUpdated",
-      loadTransactions
+      handleAuthUpdate
     );
 
     return () => {
       window.removeEventListener(
-        "storage",
-        loadTransactions
-      );
-
-      window.removeEventListener(
         "transactionsUpdated",
-        loadTransactions
+        handleTransactionUpdate
       );
 
       window.removeEventListener(
         "authUpdated",
-        loadTransactions
+        handleAuthUpdate
       );
     };
   }, []);
@@ -139,7 +122,8 @@ function Dashboard() {
         transaction.status === "Review"
     ).length;
 
-  /* Risk Check entries */
+  /* ================= RISK CHECKS ================= */
+
   const riskChecks =
     transactions.filter(
       (transaction) =>
@@ -535,7 +519,23 @@ function Dashboard() {
 
         <div className="transaction-list">
 
-          {recentTransactions.length === 0 ? (
+          {loading ? (
+
+            <div className="dashboard-empty">
+
+              <ShieldCheck size={28} />
+
+              <h4>
+                Loading transactions...
+              </h4>
+
+              <p>
+                Fetching your secure payment activity.
+              </p>
+
+            </div>
+
+          ) : recentTransactions.length === 0 ? (
 
             <div className="dashboard-empty">
 
@@ -567,7 +567,7 @@ function Dashboard() {
               (transaction) => (
 
                 <Transaction
-                  key={transaction.id}
+                  key={transaction._id}
                   receiver={
                     transaction.receiver
                   }
