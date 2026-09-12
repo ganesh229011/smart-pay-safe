@@ -11,145 +11,84 @@ import {
 function Transactions() {
   const [transactions, setTransactions] = useState([]);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  /* ================= CURRENT USER ================= */
+  /* ================= LOAD TRANSACTIONS FROM MONGODB ================= */
 
-  const getCurrentUser = () => {
-    const savedUser = localStorage.getItem(
-      "smartPayCurrentUser"
-    );
+  const loadTransactions = async () => {
+    const token =
+      localStorage.getItem("smartPayToken");
 
-    if (!savedUser) {
-      return null;
+    if (!token) {
+      setTransactions([]);
+      setLoading(false);
+      setError(
+        "Please login to view your transaction history."
+      );
+      return;
     }
+
+    setLoading(true);
+    setError("");
 
     try {
-      return JSON.parse(savedUser);
-    } catch {
-      return null;
+      const response = await fetch(
+        "https://smart-pay-safe.onrender.com/api/transactions",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error(
+          "Transaction fetch failed:",
+          data
+        );
+
+        setTransactions([]);
+        setError(
+          data.message ||
+            "Unable to load transaction history."
+        );
+
+        return;
+      }
+
+      if (Array.isArray(data.transactions)) {
+        setTransactions(data.transactions);
+      } else {
+        setTransactions([]);
+      }
+    } catch (error) {
+      console.error(
+        "Transaction API error:",
+        error
+      );
+
+      setTransactions([]);
+      setError(
+        "Unable to connect to the payment server."
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
-  /* ================= USER-SPECIFIC STORAGE KEY ================= */
-
-  const getTransactionStorageKey = () => {
-    const currentUser = getCurrentUser();
-
-    if (!currentUser?.email) {
-      return null;
-    }
-
-    return `smartPayTransactions_${currentUser.email}`;
-  };
-
-  /* ================= DEMO TRANSACTIONS ================= */
-
-  const demoTransactions = [
-    {
-      id: 1,
-      receiver: "Amazon Pay",
-      type: "Shopping",
-      amount: 1299,
-      status: "Safe",
-      date: "11 Sep 2026",
-      time: "10:30 AM",
-    },
-    {
-      id: 2,
-      receiver: "Swiggy",
-      type: "Food",
-      amount: 540,
-      status: "Safe",
-      date: "10 Sep 2026",
-      time: "08:45 PM",
-    },
-    {
-      id: 3,
-      receiver: "Unknown UPI",
-      type: "Payment",
-      amount: 4500,
-      status: "Review",
-      riskLevel: "MEDIUM",
-      riskScore: 30,
-      date: "09 Sep 2026",
-      time: "02:15 PM",
-    },
-    {
-      id: 4,
-      receiver: "Netflix",
-      type: "Subscription",
-      amount: 649,
-      status: "Safe",
-      date: "08 Sep 2026",
-      time: "11:20 AM",
-    },
-  ];
-
-  /* ================= LOAD USER TRANSACTIONS ================= */
+  /* ================= INITIAL LOAD ================= */
 
   useEffect(() => {
-    const loadTransactions = () => {
-      const storageKey = getTransactionStorageKey();
-
-      // No logged-in user
-      if (!storageKey) {
-        setTransactions([]);
-        return;
-      }
-
-      const saved = localStorage.getItem(storageKey);
-
-      // First time this user opens Transactions
-      if (!saved) {
-        setTransactions(demoTransactions);
-
-        localStorage.setItem(
-          storageKey,
-          JSON.stringify(demoTransactions)
-        );
-
-        return;
-      }
-
-      try {
-        const parsedTransactions = JSON.parse(saved);
-
-        if (Array.isArray(parsedTransactions)) {
-          setTransactions(parsedTransactions);
-        } else {
-          setTransactions([]);
-        }
-      } catch (error) {
-        console.error(
-          "Failed to load transactions:",
-          error
-        );
-
-        setTransactions([]);
-      }
-    };
-
     loadTransactions();
 
-    /* Refresh from other browser tabs/windows */
-    const handleStorageUpdate = () => {
-      loadTransactions();
-    };
-
-    window.addEventListener(
-      "storage",
-      handleStorageUpdate
-    );
-
-    /* Refresh after Risk Checker updates data */
+    /* Refresh after Risk Checker saves transaction */
     const handleTransactionUpdate = () => {
       loadTransactions();
     };
-
-    window.addEventListener(
-      "transactionsUpdated",
-      handleTransactionUpdate
-    );
 
     /* Refresh after login/logout */
     const handleAuthUpdate = () => {
@@ -158,16 +97,16 @@ function Transactions() {
     };
 
     window.addEventListener(
+      "transactionsUpdated",
+      handleTransactionUpdate
+    );
+
+    window.addEventListener(
       "authUpdated",
       handleAuthUpdate
     );
 
     return () => {
-      window.removeEventListener(
-        "storage",
-        handleStorageUpdate
-      );
-
       window.removeEventListener(
         "transactionsUpdated",
         handleTransactionUpdate
@@ -182,48 +121,108 @@ function Transactions() {
 
   /* ================= SEARCH ================= */
 
-  const searchText = search.trim().toLowerCase();
+  const searchText =
+    search.trim().toLowerCase();
 
-  const filteredTransactions = transactions.filter(
-    (transaction) => {
-      const receiver =
-        transaction.receiver?.toLowerCase() || "";
+  const filteredTransactions =
+    transactions.filter(
+      (transaction) => {
+        const receiver =
+          transaction.receiver
+            ?.toLowerCase() || "";
 
-      const type =
-        transaction.type?.toLowerCase() || "";
+        const type =
+          transaction.type
+            ?.toLowerCase() || "";
 
-      const status =
-        transaction.status?.toLowerCase() || "";
+        const status =
+          transaction.status
+            ?.toLowerCase() || "";
 
-      return (
-        receiver.includes(searchText) ||
-        type.includes(searchText) ||
-        status.includes(searchText)
-      );
-    }
-  );
+        return (
+          receiver.includes(searchText) ||
+          type.includes(searchText) ||
+          status.includes(searchText)
+        );
+      }
+    );
 
   /* ================= TOTAL AMOUNT ================= */
 
-  const totalAmount = transactions.reduce(
-    (total, transaction) =>
-      total + Number(transaction.amount || 0),
-    0
-  );
+  const totalAmount =
+    transactions.reduce(
+      (total, transaction) =>
+        total +
+        Number(
+          transaction.amount || 0
+        ),
+      0
+    );
 
   /* ================= SAFE COUNT ================= */
 
-  const safeCount = transactions.filter(
-    (transaction) =>
-      transaction.status === "Safe"
-  ).length;
+  const safeCount =
+    transactions.filter(
+      (transaction) =>
+        transaction.status === "Safe"
+    ).length;
 
   /* ================= REVIEW COUNT ================= */
 
-  const reviewCount = transactions.filter(
-    (transaction) =>
-      transaction.status === "Review"
-  ).length;
+  const reviewCount =
+    transactions.filter(
+      (transaction) =>
+        transaction.status === "Review"
+    ).length;
+
+  /* ================= DATE FORMAT ================= */
+
+  const formatDate = (transaction) => {
+    if (!transaction.createdAt) {
+      return "Recent";
+    }
+
+    const date = new Date(
+      transaction.createdAt
+    );
+
+    if (Number.isNaN(date.getTime())) {
+      return "Recent";
+    }
+
+    return date.toLocaleDateString(
+      "en-IN",
+      {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }
+    );
+  };
+
+  /* ================= TIME FORMAT ================= */
+
+  const formatTime = (transaction) => {
+    if (!transaction.createdAt) {
+      return "";
+    }
+
+    const date = new Date(
+      transaction.createdAt
+    );
+
+    if (Number.isNaN(date.getTime())) {
+      return "";
+    }
+
+    return date.toLocaleTimeString(
+      "en-IN",
+      {
+        hour: "2-digit",
+        minute: "2-digit",
+      }
+    );
+  };
 
   return (
     <div className="transactions-page">
@@ -331,7 +330,10 @@ function Transactions() {
             </span>
 
             <strong>
-              ₹{totalAmount.toLocaleString("en-IN")}
+              ₹
+              {totalAmount.toLocaleString(
+                "en-IN"
+              )}
             </strong>
           </div>
 
@@ -368,7 +370,9 @@ function Transactions() {
               placeholder="Search receiver..."
               value={search}
               onChange={(event) =>
-                setSearch(event.target.value)
+                setSearch(
+                  event.target.value
+                )
               }
             />
 
@@ -398,130 +402,196 @@ function Transactions() {
 
         </div>
 
-        {/* ================= TRANSACTION LIST ================= */}
+        {/* ================= LOADING ================= */}
 
-        <div className="transaction-table">
+        {loading ? (
 
-          {filteredTransactions.length === 0 ? (
+          <div className="no-transactions">
 
-            <div className="no-transactions">
+            <ShieldCheck size={30} />
 
-              <Search size={30} />
+            <h3>
+              Loading transactions...
+            </h3>
 
-              <h3>
-                No transactions found
-              </h3>
+            <p>
+              Fetching your secure payment history.
+            </p>
 
-              <p>
-                {search
-                  ? "Try searching with another receiver or payment type."
-                  : "Your transaction activity will appear here."}
-              </p>
+          </div>
 
-            </div>
+        ) : error ? (
 
-          ) : (
+          /* ================= ERROR ================= */
 
-            filteredTransactions.map(
-              (transaction) => (
+          <div className="no-transactions">
 
-                <div
-                  className="transaction-table-row"
-                  key={transaction.id}
-                >
+            <AlertTriangle size={30} />
 
-                  {/* PAYMENT */}
+            <h3>
+              Unable to load transactions
+            </h3>
 
-                  <div className="transaction-payment">
+            <p>
+              {error}
+            </p>
 
-                    <div className="transaction-avatar">
-                      <CreditCard size={18} />
-                    </div>
+            <button
+              type="button"
+              onClick={loadTransactions}
+              style={{
+                marginTop: "14px",
+                padding: "10px 18px",
+                borderRadius: "8px",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              Try Again
+            </button>
 
-                    <div>
+          </div>
 
-                      <strong>
-                        {transaction.receiver ||
-                          "Unknown Receiver"}
-                      </strong>
+        ) : (
 
-                      <span>
-                        {transaction.type ||
-                          "Payment"}
+          /* ================= TRANSACTION LIST ================= */
 
-                        {transaction.riskLevel && (
-                          <>
-                            {" • "}
-                            Risk:{" "}
-                            {transaction.riskScore ??
-                              0}
-                            /100
-                          </>
-                        )}
-                      </span>
+          <div className="transaction-table">
 
-                    </div>
+            {filteredTransactions.length === 0 ? (
 
-                  </div>
+              <div className="no-transactions">
 
-                  {/* DATE */}
+                <Search size={30} />
 
-                  <span className="transaction-date">
+                <h3>
+                  No transactions found
+                </h3>
 
-                    <span>
-                      {transaction.date ||
-                        "Recent"}
-                    </span>
+                <p>
+                  {search
+                    ? "Try searching with another receiver or payment type."
+                    : "Your transaction activity will appear here."}
+                </p>
 
-                    {transaction.time && (
-                      <small className="transaction-time">
-                        <Clock3 size={12} />
-                        {transaction.time}
-                      </small>
-                    )}
+              </div>
 
-                  </span>
+            ) : (
 
-                  {/* AMOUNT */}
+              filteredTransactions.map(
+                (transaction) => (
 
-                  <strong className="transaction-money">
-
-                    ₹
-                    {Number(
-                      transaction.amount || 0
-                    ).toLocaleString("en-IN")}
-
-                  </strong>
-
-                  {/* STATUS */}
-
-                  <span
-                    className={
-                      transaction.status === "Safe"
-                        ? "status-pill safe"
-                        : "status-pill review"
+                  <div
+                    className="transaction-table-row"
+                    key={
+                      transaction._id
                     }
                   >
 
-                    {transaction.status === "Safe" ? (
-                      <ShieldCheck size={13} />
-                    ) : (
-                      <AlertTriangle size={13} />
-                    )}
+                    {/* PAYMENT */}
 
-                    {transaction.status ||
-                      "Review"}
+                    <div className="transaction-payment">
 
-                  </span>
+                      <div className="transaction-avatar">
+                        <CreditCard size={18} />
+                      </div>
 
-                </div>
+                      <div>
 
+                        <strong>
+                          {transaction.receiver ||
+                            "Unknown Receiver"}
+                        </strong>
+
+                        <span>
+                          {transaction.type ||
+                            "Payment"}
+
+                          {transaction.riskLevel && (
+                            <>
+                              {" • "}
+                              Risk:{" "}
+                              {transaction.riskScore ??
+                                0}
+                              /100
+                            </>
+                          )}
+                        </span>
+
+                      </div>
+
+                    </div>
+
+                    {/* DATE */}
+
+                    <span className="transaction-date">
+
+                      <span>
+                        {formatDate(
+                          transaction
+                        )}
+                      </span>
+
+                      <small className="transaction-time">
+                        <Clock3 size={12} />
+
+                        {formatTime(
+                          transaction
+                        )}
+                      </small>
+
+                    </span>
+
+                    {/* AMOUNT */}
+
+                    <strong className="transaction-money">
+
+                      ₹
+                      {Number(
+                        transaction.amount || 0
+                      ).toLocaleString(
+                        "en-IN"
+                      )}
+
+                    </strong>
+
+                    {/* STATUS */}
+
+                    <span
+                      className={
+                        transaction.status ===
+                        "Safe"
+                          ? "status-pill safe"
+                          : "status-pill review"
+                      }
+                    >
+
+                      {transaction.status ===
+                      "Safe" ? (
+                        <ShieldCheck
+                          size={13}
+                        />
+                      ) : (
+                        <AlertTriangle
+                          size={13}
+                        />
+                      )}
+
+                      {transaction.status ||
+                        "Review"}
+
+                    </span>
+
+                  </div>
+
+                )
               )
-            )
 
-          )}
+            )}
 
-        </div>
+          </div>
+
+        )}
 
       </div>
 
