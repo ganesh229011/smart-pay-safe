@@ -241,7 +241,7 @@ function Settings() {
     );
 
     /* -----------------------------------------
-       NOTIFY APP.JSX
+       NOTIFY APP
     ----------------------------------------- */
 
     window.dispatchEvent(
@@ -327,7 +327,7 @@ function Settings() {
     );
 
     /* -----------------------------------------
-       NOTIFY APP.JSX
+       NOTIFY APP
     ----------------------------------------- */
 
     window.dispatchEvent(
@@ -350,12 +350,12 @@ function Settings() {
   };
 
   /* =========================================================
-     CLEAR USER-SPECIFIC TRANSACTION HISTORY
+     CLEAR TRANSACTION HISTORY FROM MONGODB
   ========================================================= */
 
-  const clearTransactionHistory = () => {
+  const clearTransactionHistory = async () => {
     const confirmed = window.confirm(
-      "Are you sure you want to clear your transaction history?"
+      "Are you sure you want to permanently clear your transaction history?"
     );
 
     if (!confirmed) {
@@ -363,54 +363,101 @@ function Settings() {
     }
 
     /* -----------------------------------------
-       GET CURRENT USER
+       GET JWT TOKEN
     ----------------------------------------- */
 
-    const user = getCurrentUser();
+    const token =
+      localStorage.getItem("smartPayToken");
 
-    if (!user?.email) {
+    if (!token) {
       alert(
-        "Unable to identify your account. Please login again."
+        "Your session has expired. Please login again."
       );
 
       return;
     }
 
-    /* -----------------------------------------
-       USER-SPECIFIC STORAGE KEY
+    try {
+      /* -----------------------------------------
+         DELETE CURRENT USER TRANSACTIONS
+      ----------------------------------------- */
 
-       Same key used by:
-       - Dashboard
-       - Transactions
-       - RiskChecker
-    ----------------------------------------- */
+      const response = await fetch(
+        "https://smart-pay-safe.onrender.com/api/transactions/clear",
+        {
+          method: "DELETE",
 
-    const transactionStorageKey =
-      `smartPayTransactions_${user.email}`;
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    /* -----------------------------------------
-       CLEAR ONLY CURRENT USER HISTORY
-    ----------------------------------------- */
+      const data = await response.json();
 
-    localStorage.removeItem(
-      transactionStorageKey
-    );
+      /* -----------------------------------------
+         HANDLE AUTH ERROR
+      ----------------------------------------- */
 
-    /* -----------------------------------------
-       UPDATE OTHER COMPONENTS
-    ----------------------------------------- */
+      if (response.status === 401) {
+        localStorage.removeItem(
+          "smartPayToken"
+        );
 
-    window.dispatchEvent(
-      new Event("transactionsUpdated")
-    );
+        localStorage.removeItem(
+          "smartPayCurrentUser"
+        );
 
-    /* -----------------------------------------
-       SUCCESS MESSAGE
-    ----------------------------------------- */
+        window.dispatchEvent(
+          new Event("authUpdated")
+        );
 
-    alert(
-      "Transaction history cleared successfully."
-    );
+        alert(
+          "Your session has expired. Please login again."
+        );
+
+        return;
+      }
+
+      /* -----------------------------------------
+         HANDLE OTHER ERRORS
+      ----------------------------------------- */
+
+      if (!response.ok) {
+        throw new Error(
+          data.message ||
+            "Unable to clear transaction history."
+        );
+      }
+
+      /* -----------------------------------------
+         UPDATE DASHBOARD,
+         TRANSACTIONS & SAFETY CENTER
+      ----------------------------------------- */
+
+      window.dispatchEvent(
+        new Event("transactionsUpdated")
+      );
+
+      /* -----------------------------------------
+         SUCCESS
+      ----------------------------------------- */
+
+      alert(
+        data.message ||
+          "Transaction history cleared successfully."
+      );
+    } catch (error) {
+      console.error(
+        "Clear transaction history error:",
+        error
+      );
+
+      alert(
+        error.message ||
+          "Unable to clear transaction history. Please try again."
+      );
+    }
   };
 
   return (
@@ -773,11 +820,11 @@ function Settings() {
             <div>
 
               <h3>
-                Local Storage & Privacy
+                Data & Privacy
               </h3>
 
               <p>
-                Manage locally stored SmartPay-Safe data.
+                Manage your SmartPay-Safe transaction data.
               </p>
 
             </div>
@@ -786,7 +833,7 @@ function Settings() {
 
           <div className="modern-settings-list">
 
-            {/* LOCAL STORAGE */}
+            {/* DATABASE STORAGE */}
 
             <div className="modern-setting-row">
 
@@ -797,12 +844,12 @@ function Settings() {
               <div className="modern-row-content">
 
                 <strong>
-                  Local Data Storage
+                  Secure Transaction Storage
                 </strong>
 
                 <span>
-                  Your demo transaction history is stored
-                  locally in this browser.
+                  Your transaction history is securely
+                  stored in your SmartPay-Safe account.
                 </span>
 
               </div>
@@ -832,8 +879,8 @@ function Settings() {
                 </strong>
 
                 <span>
-                  Remove locally stored transaction
-                  records from this device.
+                  Permanently remove your transaction
+                  records from your SmartPay-Safe account.
                 </span>
 
               </div>
