@@ -6,6 +6,9 @@ import {
   AlertTriangle,
   Activity,
   CheckCircle2,
+  Smartphone,
+  CreditCard,
+  ShieldAlert,
 } from "lucide-react";
 
 import { useNavigate } from "react-router-dom";
@@ -16,7 +19,9 @@ function Home() {
   return (
     <div className="home-page">
 
-      {/* ================= HERO ================= */}
+      {/* =====================================================
+          HERO
+      ===================================================== */}
 
       <section className="home-hero">
 
@@ -24,19 +29,20 @@ function Home() {
 
           <div className="home-badge">
             <span className="pulse-dot"></span>
-            Intelligent Payment Protection
+            SMART PAYMENT PROTECTION
           </div>
 
-          <h2>
-            Pay Smart.
+          <h1>
+            Your Easy Way to a
             <br />
-            <span>Stay Safe.</span>
-          </h2>
+            <span>Safer Digital Future.</span>
+          </h1>
 
           <p className="home-description">
-            Smart Pay-Safe helps you identify suspicious digital payments,
-            understand fraud risks and make safer payment decisions before
-            money leaves your account.
+            Every digital payment should feel safe and simple.
+            Smart Pay-Safe helps you detect suspicious payments,
+            understand fraud risks and make smarter decisions
+            before your money leaves your account.
           </p>
 
           <div className="home-buttons">
@@ -64,7 +70,7 @@ function Home() {
 
             <div>
               <CheckCircle2 size={16} />
-              Risk Analysis
+              Smart Risk Analysis
             </div>
 
             <div>
@@ -74,7 +80,7 @@ function Home() {
 
             <div>
               <CheckCircle2 size={16} />
-              Secure Design
+              Security First
             </div>
 
           </div>
@@ -82,7 +88,9 @@ function Home() {
         </div>
 
 
-        {/* ================= PAYMENT CARD ================= */}
+        {/* =================================================
+            PAYMENT DASHBOARD VISUAL
+        ================================================= */}
 
         <div className="payment-card-wrapper">
 
@@ -90,31 +98,68 @@ function Home() {
 
           <div className="payment-card">
 
+            {/* Header */}
+
             <div className="payment-header">
 
-              <div>
-                <p>PAYMENT SAFETY</p>
-                <h3>Risk Monitor</h3>
+              <div className="payment-brand">
+
+                <div className="mini-logo">
+                  <ShieldCheck size={18} />
+                </div>
+
+                <div>
+                  <p>SMART PAY-SAFE</p>
+                  <h3>Payment Monitor</h3>
+                </div>
+
               </div>
 
               <div className="activity-icon">
-                <Activity size={21} />
+                <Activity size={20} />
               </div>
 
             </div>
+
+
+            {/* Balance */}
+
+            <div className="balance-box">
+
+              <div>
+                <span>Total Protected</span>
+
+                <strong>
+                  ₹24,850
+                </strong>
+              </div>
+
+              <div className="safe-badge">
+                <ShieldCheck size={15} />
+                Protected
+              </div>
+
+            </div>
+
+
+            {/* Risk Score */}
 
             <div className="risk-box">
 
               <div>
 
                 <p className="label">
-                  CURRENT RISK
+                  PAYMENT RISK SCORE
                 </p>
 
                 <div className="risk-number">
                   18
                   <span>/100</span>
                 </div>
+
+                <small>
+                  Low risk detected
+                </small>
 
               </div>
 
@@ -124,25 +169,51 @@ function Home() {
 
             </div>
 
+
+            {/* Progress */}
+
             <div className="risk-progress">
               <div></div>
             </div>
 
+
+            {/* Transaction */}
+
             <div className="payment-detail">
-              <span>Receiver</span>
-              <strong>verified@upi</strong>
+
+              <span>
+                Receiver
+              </span>
+
+              <strong>
+                verified@upi
+              </strong>
+
             </div>
 
             <div className="payment-detail">
-              <span>Amount</span>
-              <strong>₹2,500</strong>
+
+              <span>
+                Amount
+              </span>
+
+              <strong>
+                ₹2,500
+              </strong>
+
             </div>
+
+
+            {/* Safe Message */}
 
             <div className="safe-message">
 
-              <ShieldCheck size={22} />
+              <div className="safe-message-icon">
+                <ShieldCheck size={20} />
+              </div>
 
               <div>
+
                 <strong>
                   Payment looks safe
                 </strong>
@@ -150,6 +221,29 @@ function Home() {
                 <p>
                   No major suspicious signals detected.
                 </p>
+
+              </div>
+
+            </div>
+
+
+            {/* Bottom Mini Stats */}
+
+            <div className="payment-mini-stats">
+
+              <div>
+                <Smartphone size={16} />
+                <span>Digital</span>
+              </div>
+
+              <div>
+                <CreditCard size={16} />
+                <span>Secure</span>
+              </div>
+
+              <div>
+                <ShieldAlert size={16} />
+                <span>Monitored</span>
               </div>
 
             </div>
@@ -161,7 +255,9 @@ function Home() {
       </section>
 
 
-      {/* ================= FEATURES ================= */}
+      {/* =====================================================
+          FEATURES
+      ===================================================== */}
 
       <section className="features-section">
 
@@ -175,6 +271,11 @@ function Home() {
             Everything you need before you pay.
           </h2>
 
+          <span>
+            Simple tools designed to help you make safer
+            digital payment decisions.
+          </span>
+
         </div>
 
 
@@ -183,7 +284,7 @@ function Home() {
           <FeatureCard
             icon={<ScanSearch size={24} />}
             title="Payment Risk Checker"
-            text="Analyze receiver details, amount and payment information to identify suspicious signals."
+            text="Analyze receiver details, payment amount and transaction information to identify suspicious signals."
             onClick={() => navigate("/risk-checker")}
           />
 
@@ -191,7 +292,7 @@ function Home() {
           <FeatureCard
             icon={<AlertTriangle size={24} />}
             title="Fraud Alerts"
-            text="Understand common digital payment scams and recognize important warning signs."
+            text="Learn about common digital payment scams and recognize warning signs before you become a victim."
             onClick={() => navigate("/fraud-alerts")}
           />
 
@@ -199,7 +300,7 @@ function Home() {
           <FeatureCard
             icon={<LockKeyhole size={24} />}
             title="Security First"
-            text="Built around secure payment practices without asking for sensitive credentials."
+            text="Built around safe payment practices without asking for sensitive credentials like OTPs or UPI PINs."
             onClick={() => navigate("/safety-center")}
           />
 
@@ -208,7 +309,9 @@ function Home() {
       </section>
 
 
-      {/* ================= HOW IT WORKS ================= */}
+      {/* =====================================================
+          HOW IT WORKS
+      ===================================================== */}
 
       <section className="how-section">
 
@@ -222,6 +325,10 @@ function Home() {
             Check before you pay.
           </h2>
 
+          <span>
+            Three simple steps to make a smarter payment decision.
+          </span>
+
         </div>
 
 
@@ -230,19 +337,19 @@ function Home() {
           <Step
             number="01"
             title="Enter Details"
-            text="Add amount, receiver and payment information."
+            text="Add the receiver, amount and basic payment information."
           />
 
           <Step
             number="02"
             title="Analyze Risk"
-            text="Smart Pay-Safe evaluates suspicious indicators."
+            text="Smart Pay-Safe evaluates the transaction for suspicious indicators."
           />
 
           <Step
             number="03"
             title="Make a Decision"
-            text="Follow the safety recommendation before proceeding."
+            text="Review the safety recommendation before proceeding with your payment."
           />
 
         </div>
@@ -250,7 +357,9 @@ function Home() {
       </section>
 
 
-      {/* ================= SECURITY ================= */}
+      {/* =====================================================
+          SECURITY
+      ===================================================== */}
 
       <section className="security-section">
 
@@ -271,16 +380,19 @@ function Home() {
             </h2>
 
             <p>
-              Smart Pay-Safe helps users recognize suspicious transactions
-              without asking for sensitive credentials such as OTPs or
-              UPI PINs.
+              Smart Pay-Safe helps users recognize suspicious
+              transactions without asking for sensitive credentials
+              such as OTPs, UPI PINs or banking passwords.
             </p>
 
           </div>
 
           <div className="security-status">
+
             <span></span>
+
             Protection Active
+
           </div>
 
         </div>
@@ -292,7 +404,9 @@ function Home() {
 }
 
 
-/* ================= FEATURE CARD ================= */
+/* =========================================================
+   FEATURE CARD
+========================================================= */
 
 function FeatureCard({
   icon,
@@ -300,14 +414,24 @@ function FeatureCard({
   text,
   onClick,
 }) {
+
   const handleKeyDown = (event) => {
-    if (event.key === "Enter" || event.key === " ") {
+
+    if (
+      event.key === "Enter" ||
+      event.key === " "
+    ) {
+
       event.preventDefault();
+
       onClick();
+
     }
+
   };
 
   return (
+
     <div
       className="feature-card"
       onClick={onClick}
@@ -334,18 +458,23 @@ function FeatureCard({
       </div>
 
     </div>
+
   );
 }
 
 
-/* ================= STEP CARD ================= */
+/* =========================================================
+   STEP CARD
+========================================================= */
 
 function Step({
   number,
   title,
   text,
 }) {
+
   return (
+
     <div className="step-card">
 
       <span className="step-number">
@@ -361,7 +490,9 @@ function Step({
       </p>
 
     </div>
+
   );
+
 }
 
 
