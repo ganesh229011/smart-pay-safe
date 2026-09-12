@@ -13,7 +13,7 @@ import {
 
 import { useNavigate } from "react-router-dom";
 
-import smartPayHorizontalLogo from "./assets/smartpay-horizontal.png";
+import smartPaySquareLogo from "./assets/smartpay-square.png";
 
 function Home() {
   const navigate = useNavigate();
@@ -25,37 +25,57 @@ function Home() {
           HERO
       ===================================================== */}
 
-      <section className="home-hero">
+      <section
+        className="home-hero"
+        style={{
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
 
-        <div className="home-hero-content">
+        {/* =====================================================
+            LARGE S LOGO BACKGROUND
+        ===================================================== */}
 
-          {/* HORIZONTAL BRAND LOGO */}
-
-          <div
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            width: "570px",
+            height: "570px",
+            left: "43%",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
+            opacity: 0.13,
+            pointerEvents: "none",
+            zIndex: 0,
+            filter:
+              "drop-shadow(0 0 35px rgba(34, 211, 238, 0.35))",
+          }}
+        >
+          <img
+            src={smartPaySquareLogo}
+            alt=""
             style={{
-              marginBottom: "24px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-start",
               width: "100%",
+              height: "100%",
+              objectFit: "contain",
+              display: "block",
             }}
-          >
-            <img
-              src={smartPayHorizontalLogo}
-              alt="Smart Pay-Safe"
-              style={{
-                width: "250px",
-                maxWidth: "75%",
-                height: "auto",
-                display: "block",
-                objectFit: "contain",
-                objectPosition: "left center",
-                mixBlendMode: "screen",
-                filter:
-                  "drop-shadow(0 0 14px rgba(34, 211, 238, 0.22))",
-              }}
-            />
-          </div>
+          />
+        </div>
+
+        {/* =====================================================
+            HERO CONTENT
+        ===================================================== */}
+
+        <div
+          className="home-hero-content"
+          style={{
+            position: "relative",
+            zIndex: 2,
+          }}
+        >
 
           <div className="home-badge">
             <span className="pulse-dot"></span>
@@ -117,7 +137,17 @@ function Home() {
 
         </div>
 
-        <div className="payment-card-wrapper">
+        {/* =====================================================
+            PAYMENT MONITOR
+        ===================================================== */}
+
+        <div
+          className="payment-card-wrapper"
+          style={{
+            position: "relative",
+            zIndex: 2,
+          }}
+        >
 
           <div className="payment-glow"></div>
 
@@ -132,8 +162,13 @@ function Home() {
                 </div>
 
                 <div>
-                  <p>SMART PAY-SAFE</p>
-                  <h3>Payment Monitor</h3>
+                  <p>
+                    SMART PAY-SAFE
+                  </p>
+
+                  <h3>
+                    Payment Monitor
+                  </h3>
                 </div>
 
               </div>
@@ -147,16 +182,23 @@ function Home() {
             <div className="balance-box">
 
               <div>
-                <span>Total Protected</span>
+
+                <span>
+                  Total Protected
+                </span>
 
                 <strong>
                   ₹24,850
                 </strong>
+
               </div>
 
               <div className="safe-badge">
+
                 <ShieldCheck size={15} />
+
                 Protected
+
               </div>
 
             </div>
@@ -170,8 +212,13 @@ function Home() {
                 </p>
 
                 <div className="risk-number">
+
                   18
-                  <span>/100</span>
+
+                  <span>
+                    /100
+                  </span>
+
                 </div>
 
                 <small>
@@ -238,17 +285,23 @@ function Home() {
 
               <div>
                 <Smartphone size={16} />
-                <span>Digital</span>
+                <span>
+                  Digital
+                </span>
               </div>
 
               <div>
                 <CreditCard size={16} />
-                <span>Secure</span>
+                <span>
+                  Secure
+                </span>
               </div>
 
               <div>
                 <ShieldAlert size={16} />
-                <span>Monitored</span>
+                <span>
+                  Monitored
+                </span>
               </div>
 
             </div>
@@ -401,6 +454,10 @@ function Home() {
   );
 }
 
+/* =========================================================
+   FEATURE CARD
+========================================================= */
+
 function FeatureCard({
   icon,
   title,
@@ -454,6 +511,10 @@ function FeatureCard({
 
   );
 }
+
+/* =========================================================
+   STEP
+========================================================= */
 
 function Step({
   number,
