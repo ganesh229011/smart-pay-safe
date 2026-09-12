@@ -17,132 +17,118 @@ function SafetyCenter() {
   const [openTip, setOpenTip] = useState(null);
   const [search, setSearch] = useState("");
   const [safetyScore, setSafetyScore] = useState(92);
+  const [loading, setLoading] = useState(true);
 
-  /* ================= CURRENT USER ================= */
+  /* ================= LOAD TRANSACTIONS FROM MONGODB ================= */
 
-  const getCurrentUser = () => {
-    const savedUser = localStorage.getItem(
-      "smartPayCurrentUser"
-    );
+  const calculateSafetyScore = async () => {
+    const token =
+      localStorage.getItem("smartPayToken");
 
-    if (!savedUser) {
-      return null;
+    if (!token) {
+      setSafetyScore(92);
+      setLoading(false);
+      return;
     }
 
     try {
-      return JSON.parse(savedUser);
-    } catch {
-      return null;
+      const response = await fetch(
+        "https://smart-pay-safe.onrender.com/api/transactions",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error(
+          "Safety Center transaction fetch failed:",
+          data
+        );
+
+        setSafetyScore(92);
+        return;
+      }
+
+      const transactions =
+        Array.isArray(data.transactions)
+          ? data.transactions
+          : [];
+
+      if (transactions.length === 0) {
+        setSafetyScore(92);
+        return;
+      }
+
+      const safeTransactions =
+        transactions.filter(
+          (transaction) =>
+            transaction.status === "Safe"
+        ).length;
+
+      const score = Math.max(
+        0,
+        Math.min(
+          100,
+          Math.round(
+            (safeTransactions /
+              transactions.length) *
+              100
+          )
+        )
+      );
+
+      setSafetyScore(score);
+    } catch (error) {
+      console.error(
+        "Safety Center API error:",
+        error
+      );
+
+      setSafetyScore(92);
+    } finally {
+      setLoading(false);
     }
   };
 
-  /* ================= USER TRANSACTION KEY ================= */
-
-  const getTransactionStorageKey = () => {
-    const currentUser = getCurrentUser();
-
-    if (!currentUser?.email) {
-      return null;
-    }
-
-    return `smartPayTransactions_${currentUser.email}`;
-  };
-
-  /* ================= CALCULATE SAFETY SCORE ================= */
+  /* ================= INITIAL LOAD ================= */
 
   useEffect(() => {
-    const calculateSafetyScore = () => {
-      const storageKey =
-        getTransactionStorageKey();
-
-      if (!storageKey) {
-        setSafetyScore(92);
-        return;
-      }
-
-      const saved =
-        localStorage.getItem(storageKey);
-
-      if (!saved) {
-        setSafetyScore(92);
-        return;
-      }
-
-      try {
-        const transactions =
-          JSON.parse(saved);
-
-        if (
-          !Array.isArray(transactions) ||
-          transactions.length === 0
-        ) {
-          setSafetyScore(92);
-          return;
-        }
-
-        const safeTransactions =
-          transactions.filter(
-            (transaction) =>
-              transaction.status === "Safe"
-          ).length;
-
-        const score = Math.max(
-          0,
-          Math.min(
-            100,
-            Math.round(
-              (safeTransactions /
-                transactions.length) *
-                100
-            )
-          )
-        );
-
-        setSafetyScore(score);
-      } catch (error) {
-        console.error(
-          "Failed to calculate safety score:",
-          error
-        );
-
-        setSafetyScore(92);
-      }
-    };
-
     calculateSafetyScore();
 
-    /* Update after Risk Checker */
-    window.addEventListener(
-      "transactionsUpdated",
-      calculateSafetyScore
-    );
+    /* Update after Risk Checker saves transaction */
+    const handleTransactionUpdate = () => {
+      calculateSafetyScore();
+    };
 
     /* Update after login/logout */
+    const handleAuthUpdate = () => {
+      calculateSafetyScore();
+    };
+
     window.addEventListener(
-      "authUpdated",
-      calculateSafetyScore
+      "transactionsUpdated",
+      handleTransactionUpdate
     );
 
-    /* Update from another tab */
     window.addEventListener(
-      "storage",
-      calculateSafetyScore
+      "authUpdated",
+      handleAuthUpdate
     );
 
     return () => {
       window.removeEventListener(
         "transactionsUpdated",
-        calculateSafetyScore
+        handleTransactionUpdate
       );
 
       window.removeEventListener(
         "authUpdated",
-        calculateSafetyScore
-      );
-
-      window.removeEventListener(
-        "storage",
-        calculateSafetyScore
+        handleAuthUpdate
       );
     };
   }, []);
@@ -216,9 +202,7 @@ function SafetyCenter() {
 
   const toggleTip = (id) => {
     setOpenTip((currentId) =>
-      currentId === id
-        ? null
-        : id
+      currentId === id ? null : id
     );
   };
 
@@ -249,6 +233,18 @@ function SafetyCenter() {
       );
     });
   }, [search]);
+
+  /* ================= SAFETY LEVEL ================= */
+
+  let safetyLevel = "Excellent";
+
+  if (safetyScore < 80) {
+    safetyLevel = "Good";
+  }
+
+  if (safetyScore < 60) {
+    safetyLevel = "Needs Attention";
+  }
 
   return (
     <div className="safety-page">
@@ -316,9 +312,15 @@ function SafetyCenter() {
             SAFETY SCORE
           </span>
 
-          <strong>
-            {safetyScore}
-          </strong>
+          {loading ? (
+            <strong>
+              --
+            </strong>
+          ) : (
+            <strong>
+              {safetyScore}
+            </strong>
+          )}
 
           <small>
             /100
@@ -333,6 +335,12 @@ function SafetyCenter() {
             ></div>
 
           </div>
+
+          <small>
+            {loading
+              ? "Analyzing transactions..."
+              : safetyLevel}
+          </small>
 
         </div>
 
