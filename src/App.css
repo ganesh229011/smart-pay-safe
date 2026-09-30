@@ -8769,3 +8769,159 @@ body:not(.light-mode) .profile-shield {
     min-width: 0;
   }
 }
+/* =========================================================
+   MOBILE RESPONSIVE FIX - SMART PAY-SAFE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  /* Main page */
+  .home-page {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+
+  /* Hero section */
+  .home-hero {
+    width: 100%;
+    max-width: 100%;
+    padding: 18px 14px 35px;
+    margin: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  /* Hero content */
+  .home-hero-content {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Top small badge */
+  .home-hero .hero-badge,
+  .home-hero .status-badge {
+    max-width: 100%;
+    box-sizing: border-box;
+    font-size: 10px;
+    padding: 8px 12px;
+  }
+
+  /* Main heading */
+  .home-hero h1,
+  .home-hero .hero-title {
+    font-size: clamp(38px, 11vw, 52px);
+    line-height: 0.98;
+    letter-spacing: -1.8px;
+    margin: 18px 0 18px;
+    max-width: 100%;
+    word-break: normal;
+  }
+
+  /* Hero paragraph */
+  .home-hero p,
+  .home-hero .hero-description {
+    font-size: 14px;
+    line-height: 1.65;
+    max-width: 100%;
+    margin-bottom: 22px;
+  }
+
+  /* Main CTA button */
+  .home-hero button,
+  .home-hero .primary-btn,
+  .home-hero .hero-button {
+    width: 100%;
+    max-width: 100%;
+    min-height: 48px;
+    box-sizing: border-box;
+    font-size: 13px;
+  }
+
+  /* Payment card wrapper */
+  .payment-card-wrapper {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  /* Payment card */
+  .payment-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  /* Payment card content */
+  .payment-card * {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Features */
+  .features-section {
+    width: 100%;
+    max-width: 100%;
+    padding: 25px 14px;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  /* Prevent horizontal scrolling */
+  body {
+    overflow-x: hidden;
+  }
+
+  #root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+}
+
+
+/* =========================================================
+   EXTRA SMALL DEVICES
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+  .home-hero {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .home-hero h1,
+  .home-hero .hero-title {
+    font-size: 40px;
+    line-height: 0.98;
+    letter-spacing: -1.5px;
+  }
+
+  .home-hero p,
+  .home-hero .hero-description {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .payment-card-wrapper {
+    width: 100%;
+  }
+
+  .payment-card {
+    border-radius: 18px;
+  }
+
+  .features-section {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
