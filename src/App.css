@@ -8925,3 +8925,105 @@ body:not(.light-mode) .profile-shield {
     padding-right: 12px;
   }
 }
+/* =========================================================
+   MOBILE NAVIGATION FIX - SMART PAY-SAFE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+  /* Sidebar */
+  .sidebar {
+    width: 100%;
+    height: auto;
+    min-height: auto;
+    position: relative;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 12px 10px;
+    box-sizing: border-box;
+
+    overflow: visible;
+  }
+
+  /* Sidebar logo */
+  .sidebar-logo {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  /* Navigation */
+  .sidebar-nav,
+  .nav-links {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    gap: 7px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    padding: 5px 2px 8px;
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .sidebar-nav::-webkit-scrollbar,
+  .nav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Navigation item */
+  .sidebar-nav a,
+  .nav-links a,
+  .sidebar-nav button,
+  .nav-links button {
+
+    flex: 0 0 auto;
+
+    min-width: max-content;
+
+    padding: 9px 13px;
+
+    border-radius: 10px;
+
+    white-space: nowrap;
+
+    font-size: 12px;
+  }
+
+  /* Main content */
+  .main-content {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  /* Main area */
+  .main {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    box-sizing: border-box;
+  }
+
+  /* Topbar */
+  .topbar {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+}
