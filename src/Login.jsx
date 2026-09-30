@@ -9,7 +9,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-import smartPaySquareLogo from "./assets/smartpay-lr.png";
+import smartPaySquareLogo from "./assets/smartpay-logo.png";
 
 function Login() {
   const navigate = useNavigate();

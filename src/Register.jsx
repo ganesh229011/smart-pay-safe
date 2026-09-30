@@ -11,7 +11,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-import smartPaySquareLogo from "./assets/smartpay-lr.png";
+import smartPaySquareLogo from "./assets/smartpay-logo.png";
 
 function Register() {
   const navigate = useNavigate();
