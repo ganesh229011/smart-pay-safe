@@ -10,18 +10,8 @@ import {
 } from "react-router-dom";
 
 import {
-  Home as HomeIcon,
-  LayoutDashboard,
-  ShieldAlert,
-  ReceiptText,
-  TriangleAlert,
-  ShieldCheck,
-  Settings as SettingsIcon,
-  LogOut,
   Menu,
   X,
-  MoreHorizontal,
-  Bell,
 } from "lucide-react";
 
 import Home from "./Home";
@@ -87,16 +77,16 @@ function AppContent() {
 
 
   /* =========================================================
-     MOBILE MORE MENU
+     MOBILE SIDEBAR STATE
   ========================================================= */
 
-  const [mobileMoreOpen, setMobileMoreOpen] =
+  const [mobileMenuOpen, setMobileMenuOpen] =
     useState(false);
 
 
   /* =========================================================
      THEME
-     DEFAULT = LIGHT
+     DEFAULT = LIGHT MODE
   ========================================================= */
 
   const [darkMode, setDarkMode] = useState(() => {
@@ -139,7 +129,7 @@ function AppContent() {
 
 
   /* =========================================================
-     THEME UPDATE
+     THEME UPDATE LISTENER
   ========================================================= */
 
   useEffect(() => {
@@ -192,7 +182,7 @@ function AppContent() {
 
 
   /* =========================================================
-     USER UPDATE
+     USER UPDATE LISTENER
   ========================================================= */
 
   useEffect(() => {
@@ -225,7 +215,7 @@ function AppContent() {
 
 
   /* =========================================================
-     AUTH UPDATE
+     AUTH UPDATE LISTENER
   ========================================================= */
 
   useEffect(() => {
@@ -263,11 +253,11 @@ function AppContent() {
 
 
   /* =========================================================
-     CLOSE MOBILE MORE
+     CLOSE MOBILE MENU
   ========================================================= */
 
-  const closeMobileMore = () => {
-    setMobileMoreOpen(false);
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
   };
 
 
@@ -298,7 +288,7 @@ function AppContent() {
     });
 
 
-    closeMobileMore();
+    closeMobileMenu();
 
 
     window.dispatchEvent(
@@ -319,7 +309,7 @@ function AppContent() {
 
 
   /* =========================================================
-     DESKTOP MENU
+     MENU ITEMS
   ========================================================= */
 
   const menuItems = [
@@ -356,46 +346,52 @@ function AppContent() {
   ];
 
 
-  /* =========================================================
-     MOBILE BOTTOM NAV
-  ========================================================= */
-
-  const mobileNavItems = [
-    {
-      path: "/",
-      name: "Home",
-      icon: HomeIcon,
-    },
-    {
-      path: "/risk-checker",
-      name: "Risk",
-      icon: ShieldAlert,
-    },
-    {
-      path: "/fraud-alerts",
-      name: "Alerts",
-      icon: TriangleAlert,
-    },
-    {
-      path: "/transactions",
-      name: "Transactions",
-      icon: ReceiptText,
-    },
-  ];
-
-
   return (
     <div className="app">
 
 
       {/* =====================================================
-          DESKTOP SIDEBAR
+          MOBILE OVERLAY
       ===================================================== */}
 
-      <aside className="sidebar">
+      {mobileMenuOpen && (
+        <div
+          className="mobile-sidebar-overlay"
+          onClick={closeMobileMenu}
+        />
+      )}
 
 
-        {/* LOGO */}
+      {/* =====================================================
+          SIDEBAR
+      ===================================================== */}
+
+      <aside
+        className={
+          mobileMenuOpen
+            ? "sidebar mobile-open"
+            : "sidebar"
+        }
+      >
+
+
+        {/* MOBILE CLOSE BUTTON */}
+
+        <button
+          type="button"
+          className="mobile-sidebar-close"
+          onClick={closeMobileMenu}
+          aria-label="Close navigation"
+        >
+
+          <X size={21} />
+
+        </button>
+
+
+        {/* =================================================
+            WEBSITE LOGO
+        ================================================= */}
 
         <div className="logo">
 
@@ -421,7 +417,9 @@ function AppContent() {
         </div>
 
 
-        {/* MAIN MENU */}
+        {/* =================================================
+            MAIN MENU
+        ================================================= */}
 
         <nav className="navigation">
 
@@ -435,6 +433,7 @@ function AppContent() {
             <NavLink
               key={item.path}
               to={item.path}
+              onClick={closeMobileMenu}
               className={({ isActive }) =>
                 isActive
                   ? "nav-item active"
@@ -457,7 +456,9 @@ function AppContent() {
         </nav>
 
 
-        {/* ACCOUNT */}
+        {/* =================================================
+            ACCOUNT
+        ================================================= */}
 
         <div className="sidebar-bottom">
 
@@ -467,10 +468,14 @@ function AppContent() {
 
 
           {isLoggedIn ? (
+
             <>
+
+              {/* SETTINGS */}
 
               <NavLink
                 to="/settings"
+                onClick={closeMobileMenu}
                 className={({ isActive }) =>
                   isActive
                     ? "nav-item active"
@@ -488,6 +493,8 @@ function AppContent() {
 
               </NavLink>
 
+
+              {/* LOGOUT */}
 
               <button
                 type="button"
@@ -509,8 +516,11 @@ function AppContent() {
 
           ) : (
 
+            /* LOGIN */
+
             <NavLink
               to="/login"
+              onClick={closeMobileMenu}
               className="nav-item"
             >
 
@@ -532,30 +542,36 @@ function AppContent() {
 
 
       {/* =====================================================
-          MAIN
+          MAIN CONTENT
       ===================================================== */}
 
       <main className="main">
 
 
-        {/* ===================================================
-            TOPBAR
-        =================================================== */}
+        {/* =================================================
+            TOP HEADER
+        ================================================= */}
 
         <header className="topbar">
 
 
-          {/* MOBILE BRAND */}
+          {/* MOBILE HAMBURGER */}
 
-          <div className="mobile-brand">
+          <button
+            type="button"
+            className="mobile-menu-button"
+            onClick={() =>
+              setMobileMenuOpen(true)
+            }
+            aria-label="Open navigation"
+          >
 
-            <img
-              src={smartPayLogo}
-              alt="SmartPay"
-            />
+            <Menu size={22} />
 
-          </div>
+          </button>
 
+
+          {/* HEADER TITLE */}
 
           <div className="topbar-title">
 
@@ -574,10 +590,14 @@ function AppContent() {
           </div>
 
 
+          {/* PROFILE */}
+
           {isLoggedIn && (
 
             <div className="profile">
 
+
+              {/* NOTIFICATION */}
 
               <button
                 type="button"
@@ -587,9 +607,11 @@ function AppContent() {
                 }
                 aria-label="Notifications"
               >
-                <Bell size={17} />
+                🔔
               </button>
 
+
+              {/* AVATAR */}
 
               <div className="avatar">
 
@@ -599,6 +621,8 @@ function AppContent() {
 
               </div>
 
+
+              {/* PROFILE INFO */}
 
               <div className="profile-info">
 
@@ -630,12 +654,14 @@ function AppContent() {
         </header>
 
 
-        {/* ===================================================
+        {/* =================================================
             ROUTES
-        =================================================== */}
+        ================================================= */}
 
         <Routes>
 
+
+          {/* LOGIN */}
 
           <Route
             path="/login"
@@ -652,6 +678,8 @@ function AppContent() {
           />
 
 
+          {/* REGISTER */}
+
           <Route
             path="/register"
             element={
@@ -667,11 +695,15 @@ function AppContent() {
           />
 
 
+          {/* HOME */}
+
           <Route
             path="/"
             element={<Home />}
           />
 
+
+          {/* DASHBOARD */}
 
           <Route
             path="/dashboard"
@@ -688,6 +720,8 @@ function AppContent() {
           />
 
 
+          {/* RISK CHECKER */}
+
           <Route
             path="/risk-checker"
             element={
@@ -702,6 +736,8 @@ function AppContent() {
             }
           />
 
+
+          {/* TRANSACTIONS */}
 
           <Route
             path="/transactions"
@@ -718,6 +754,8 @@ function AppContent() {
           />
 
 
+          {/* FRAUD ALERTS */}
+
           <Route
             path="/fraud-alerts"
             element={
@@ -732,6 +770,8 @@ function AppContent() {
             }
           />
 
+
+          {/* SAFETY CENTER */}
 
           <Route
             path="/safety-center"
@@ -748,6 +788,8 @@ function AppContent() {
           />
 
 
+          {/* SETTINGS */}
+
           <Route
             path="/settings"
             element={
@@ -763,6 +805,8 @@ function AppContent() {
           />
 
 
+          {/* FALLBACK */}
+
           <Route
             path="*"
             element={
@@ -775,197 +819,16 @@ function AppContent() {
 
         </Routes>
 
-
-        {/* ===================================================
-            MOBILE MORE MENU
-        =================================================== */}
-
-        {mobileMoreOpen && (
-
-          <>
-
-            <div
-              className="mobile-more-overlay"
-              onClick={closeMobileMore}
-            ></div>
-
-
-            <div className="mobile-more-sheet">
-
-
-              <div className="mobile-more-header">
-
-                <div>
-
-                  <span>
-                    SMART PAY-SAFE
-                  </span>
-
-                  <strong>
-                    More
-                  </strong>
-
-                </div>
-
-
-                <button
-                  type="button"
-                  onClick={closeMobileMore}
-                  aria-label="Close"
-                >
-                  <X size={19} />
-                </button>
-
-              </div>
-
-
-              <NavLink
-                to="/dashboard"
-                onClick={closeMobileMore}
-                className="mobile-more-item"
-              >
-
-                <span className="more-icon blue">
-                  <LayoutDashboard size={19} />
-                </span>
-
-                <span>
-                  Dashboard
-                </span>
-
-              </NavLink>
-
-
-              <NavLink
-                to="/safety-center"
-                onClick={closeMobileMore}
-                className="mobile-more-item"
-              >
-
-                <span className="more-icon green">
-                  <ShieldCheck size={19} />
-                </span>
-
-                <span>
-                  Safety Center
-                </span>
-
-              </NavLink>
-
-
-              {isLoggedIn && (
-
-                <NavLink
-                  to="/settings"
-                  onClick={closeMobileMore}
-                  className="mobile-more-item"
-                >
-
-                  <span className="more-icon purple">
-                    <SettingsIcon size={19} />
-                  </span>
-
-                  <span>
-                    Settings
-                  </span>
-
-                </NavLink>
-
-              )}
-
-
-              {isLoggedIn && (
-
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="mobile-more-item mobile-logout"
-                >
-
-                  <span className="more-icon red">
-                    <LogOut size={19} />
-                  </span>
-
-                  <span>
-                    Logout
-                  </span>
-
-                </button>
-
-              )}
-
-            </div>
-
-          </>
-
-        )}
-
-
-        {/* ===================================================
-            MOBILE BOTTOM NAVIGATION
-        =================================================== */}
-
-        <nav className="mobile-bottom-nav">
-
-
-          {mobileNavItems.map((item) => {
-
-            const Icon = item.icon;
-
-            return (
-
-              <NavLink
-                key={item.path}
-                to={item.path}
-                className={({ isActive }) =>
-                  isActive
-                    ? "mobile-bottom-item active"
-                    : "mobile-bottom-item"
-                }
-              >
-
-                <Icon size={20} />
-
-                <span>
-                  {item.name}
-                </span>
-
-              </NavLink>
-
-            );
-
-          })}
-
-
-          <button
-            type="button"
-            className={
-              mobileMoreOpen
-                ? "mobile-bottom-item more-button active"
-                : "mobile-bottom-item more-button"
-            }
-            onClick={() =>
-              setMobileMoreOpen(true)
-            }
-          >
-
-            <MoreHorizontal size={21} />
-
-            <span>
-              More
-            </span>
-
-          </button>
-
-        </nav>
-
-
       </main>
 
     </div>
   );
 }
 
+
+/* =========================================================
+   APP
+========================================================= */
 
 function App() {
 
