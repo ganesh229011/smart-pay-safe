@@ -40,42 +40,43 @@ function RiskChecker() {
   const checkRisk = async () => {
     const value = Number(amount);
 
-    if (!receiver.trim() || !amount) {
-      alert(
-        "Please enter receiver and amount."
-      );
+    /* ---------------------------------------------------------
+       BASIC VALIDATION
+    --------------------------------------------------------- */
 
+    if (!receiver.trim() || !amount) {
+      alert("Please enter receiver and amount.");
       return;
     }
 
     if (value <= 0) {
-      alert(
-        "Please enter a valid payment amount."
-      );
-
+      alert("Please enter a valid payment amount.");
       return;
     }
+
+    /* ---------------------------------------------------------
+       CURRENT USER
+    --------------------------------------------------------- */
 
     const currentUser = getCurrentUser();
 
     if (!currentUser?.email) {
-      alert(
-        "Please login before checking payment risk."
-      );
-
+      alert("Please login before checking payment risk.");
       return;
     }
 
-    const token =
-      localStorage.getItem(
-        "smartPayToken"
-      );
+    /* ---------------------------------------------------------
+       TOKEN
+    --------------------------------------------------------- */
+
+    const token = localStorage.getItem(
+      "smartPayToken"
+    );
 
     if (!token) {
       alert(
         "Your login session has expired. Please login again."
       );
-
       return;
     }
 
@@ -89,17 +90,30 @@ function RiskChecker() {
 
     let warnings = [];
 
-    /* -----------------------------------------
+    /* =======================================================
        AMOUNT CHECK
-    ----------------------------------------- */
+       
+       ₹0 - ₹9,999       → LOW
+       ₹10,000 - ₹49,999 → LOW-MEDIUM
+       ₹50,000 - ₹99,999 → MEDIUM
+       ₹1,00,000+        → HIGH
+    ======================================================= */
 
-    if (value >= 10000) {
-      score += 35;
+    if (value >= 100000) {
+      score += 90;
+
+      warnings.push(
+        "Very high transaction amount detected."
+      );
+
+    } else if (value >= 50000) {
+      score += 50;
 
       warnings.push(
         "High transaction amount detected."
       );
-    } else if (value >= 5000) {
+
+    } else if (value >= 10000) {
       score += 20;
 
       warnings.push(
@@ -107,9 +121,9 @@ function RiskChecker() {
       );
     }
 
-    /* -----------------------------------------
+    /* =======================================================
        RECEIVER CHECK
-    ----------------------------------------- */
+    ======================================================= */
 
     const suspiciousWords = [
       "unknown",
@@ -123,23 +137,19 @@ function RiskChecker() {
     const lowerReceiver =
       receiver.trim().toLowerCase();
 
-    suspiciousWords.forEach(
-      (word) => {
-        if (
-          lowerReceiver.includes(word)
-        ) {
-          score += 20;
+    suspiciousWords.forEach((word) => {
+      if (lowerReceiver.includes(word)) {
+        score += 20;
 
-          warnings.push(
-            `Suspicious keyword detected: "${word}"`
-          );
-        }
+        warnings.push(
+          `Suspicious keyword detected: "${word}"`
+        );
       }
-    );
+    });
 
-    /* -----------------------------------------
+    /* =======================================================
        MESSAGE CHECK
-    ----------------------------------------- */
+    ======================================================= */
 
     const lowerMessage =
       message.trim().toLowerCase();
@@ -156,25 +166,38 @@ function RiskChecker() {
       );
     }
 
-    /* -----------------------------------------
+    /* =======================================================
        LIMIT SCORE
-    ----------------------------------------- */
+    ======================================================= */
 
     if (score > 100) {
       score = 100;
     }
 
-    /* -----------------------------------------
+    /* =======================================================
        RISK LEVEL
-    ----------------------------------------- */
+       
+       0 - 29     → LOW
+       30 - 49    → LOW-MEDIUM
+       50 - 99    → MEDIUM
+       100        → HIGH
+    ======================================================= */
 
     let level = "LOW";
 
-    if (score >= 60) {
+    if (score >= 100) {
       level = "HIGH";
-    } else if (score >= 30) {
+
+    } else if (score >= 50) {
       level = "MEDIUM";
+
+    } else if (score >= 30) {
+      level = "LOW-MEDIUM";
     }
+
+    /* =======================================================
+       FINAL RISK RESULT
+    ======================================================= */
 
     const riskResult = {
       score,
@@ -196,13 +219,11 @@ function RiskChecker() {
 
           headers: {
             "Content-Type": "application/json",
-
             Authorization: `Bearer ${token}`,
           },
 
           body: JSON.stringify({
-            receiver:
-              receiver.trim(),
+            receiver: receiver.trim(),
 
             type: "Risk Check",
 
@@ -215,18 +236,18 @@ function RiskChecker() {
 
             riskLevel: level,
 
+            // Score saved in database
+            // but NOT displayed to the user.
             riskScore: score,
 
-            message:
-              message.trim(),
+            message: message.trim(),
 
             warnings,
           }),
         }
       );
 
-      const data =
-        await response.json();
+      const data = await response.json();
 
       if (!response.ok) {
         console.error(
@@ -242,9 +263,9 @@ function RiskChecker() {
         return;
       }
 
-      /* -----------------------------------------
+      /* ---------------------------------------------------------
          UPDATE OTHER COMPONENTS
-      ----------------------------------------- */
+      --------------------------------------------------------- */
 
       window.dispatchEvent(
         new Event("transactionsUpdated")
@@ -259,10 +280,92 @@ function RiskChecker() {
       alert(
         "Risk was calculated, but the transaction could not be saved to the server."
       );
+
     } finally {
       setLoading(false);
     }
   };
+
+  /* =========================================================
+     CLEAR RESULT
+  ========================================================= */
+
+  const clearResult = () => {
+    setReceiver("");
+    setAmount("");
+    setMessage("");
+    setResult(null);
+  };
+
+  /* =========================================================
+     RISK TITLE
+  ========================================================= */
+
+  const getRiskTitle = () => {
+    if (!result) return "";
+
+    if (result.level === "LOW") {
+      return "Payment looks safe";
+    }
+
+    if (result.level === "LOW-MEDIUM") {
+      return "Payment needs attention";
+    }
+
+    if (result.level === "MEDIUM") {
+      return "Payment needs attention";
+    }
+
+    return "High risk payment detected";
+  };
+
+  /* =========================================================
+     RISK DESCRIPTION
+  ========================================================= */
+
+  const getRiskDescription = () => {
+    if (!result) return "";
+
+    if (result.level === "LOW") {
+      return "No major risk indicators were detected for this payment.";
+    }
+
+    if (result.level === "LOW-MEDIUM") {
+      return "The transaction amount is relatively high. Please verify the payment details before proceeding.";
+    }
+
+    if (result.level === "MEDIUM") {
+      return "A higher transaction amount or other risk indicators were detected. Please verify the payment details carefully.";
+    }
+
+    return "A very high transaction amount or multiple risk indicators were detected. Verify the receiver before proceeding.";
+  };
+
+  /* =========================================================
+     RECOMMENDATION
+  ========================================================= */
+
+  const getRecommendation = () => {
+    if (!result) return "";
+
+    if (result.level === "LOW") {
+      return "You can proceed, but always verify the receiver before paying.";
+    }
+
+    if (result.level === "LOW-MEDIUM") {
+      return "Verify the receiver and payment details carefully before making the payment.";
+    }
+
+    if (result.level === "MEDIUM") {
+      return "Verify the receiver carefully and confirm the payment details before proceeding.";
+    }
+
+    return "Do not proceed until you verify the receiver and payment details.";
+  };
+
+  /* =========================================================
+     UI
+  ========================================================= */
 
   return (
     <div className="risk-page">
@@ -314,7 +417,9 @@ function RiskChecker() {
           <div className="risk-card-header">
 
             <div className="risk-icon">
+
               <ShieldCheck />
+
             </div>
 
             <div>
@@ -334,7 +439,9 @@ function RiskChecker() {
 
           <div className="risk-form">
 
-            {/* RECEIVER */}
+            {/* =================================================
+                RECEIVER
+            ================================================= */}
 
             <label>
               Receiver / UPI ID
@@ -349,15 +456,15 @@ function RiskChecker() {
                 placeholder="Example: Amazon Pay"
                 value={receiver}
                 onChange={(e) =>
-                  setReceiver(
-                    e.target.value
-                  )
+                  setReceiver(e.target.value)
                 }
               />
 
             </div>
 
-            {/* AMOUNT */}
+            {/* =================================================
+                AMOUNT
+            ================================================= */}
 
             <label>
               Payment Amount
@@ -375,15 +482,15 @@ function RiskChecker() {
                 value={amount}
                 min="1"
                 onChange={(e) =>
-                  setAmount(
-                    e.target.value
-                  )
+                  setAmount(e.target.value)
                 }
               />
 
             </div>
 
-            {/* MESSAGE */}
+            {/* =================================================
+                MESSAGE
+            ================================================= */}
 
             <label>
 
@@ -399,13 +506,13 @@ function RiskChecker() {
               placeholder="Example: Payment for product..."
               value={message}
               onChange={(e) =>
-                setMessage(
-                  e.target.value
-                )
+                setMessage(e.target.value)
               }
             />
 
-            {/* CHECK BUTTON */}
+            {/* =================================================
+                CHECK BUTTON
+            ================================================= */}
 
             <button
               type="button"
@@ -417,7 +524,7 @@ function RiskChecker() {
               <ShieldCheck size={18} />
 
               {loading
-                ? "Saving Payment..."
+                ? "Checking Payment..."
                 : "Check Payment Risk"}
 
             </button>
@@ -434,10 +541,16 @@ function RiskChecker() {
 
           {!result ? (
 
+            /* =================================================
+               EMPTY RESULT
+            ================================================= */
+
             <div className="empty-result">
 
               <div className="empty-result-icon">
+
                 <ShieldCheck size={38} />
+
               </div>
 
               <h3>
@@ -454,13 +567,23 @@ function RiskChecker() {
 
           ) : (
 
+            /* =================================================
+               RISK RESULT
+            ================================================= */
+
             <div className="risk-result">
 
-              {/* RESULT HEADER */}
+              {/* =================================================
+                  RESULT HEADER
+              ================================================= */}
 
               <div className="result-header">
 
-                <CheckCircle2 size={22} />
+                {result.level === "HIGH" ? (
+                  <AlertTriangle size={22} />
+                ) : (
+                  <CheckCircle2 size={22} />
+                )}
 
                 <span>
                   Analysis Complete
@@ -468,41 +591,49 @@ function RiskChecker() {
 
               </div>
 
-              {/* SCORE */}
-
-              <div className="risk-score-display">
-
-                <strong>
-                  {result.score}
-                </strong>
-
-                <span>
-                  /100
-                </span>
-
-              </div>
-
-              {/* LEVEL */}
+              {/* =================================================
+                  RISK LEVEL
+              ================================================= */}
 
               <div
-                className={`risk-level ${result.level.toLowerCase()}`}
+                className={`risk-level ${result.level
+                  .toLowerCase()
+                  .replace(" ", "-")}`}
               >
-                {result.level} RISK
+
+                {result.level === "LOW" &&
+                  "LOW RISK"}
+
+                {result.level === "LOW-MEDIUM" &&
+                  "LOW-MEDIUM RISK"}
+
+                {result.level === "MEDIUM" &&
+                  "MEDIUM RISK"}
+
+                {result.level === "HIGH" &&
+                  "HIGH RISK"}
+
               </div>
 
-              {/* RESULT TITLE */}
+              {/* =================================================
+                  RESULT TITLE
+              ================================================= */}
 
               <h3>
-
-                {result.level === "LOW"
-                  ? "Payment looks safe"
-                  : result.level === "MEDIUM"
-                  ? "Payment needs attention"
-                  : "High risk payment detected"}
-
+                {getRiskTitle()}
               </h3>
 
-              {/* RISK WARNINGS */}
+              {/* =================================================
+                  RESULT DESCRIPTION
+              ================================================= */}
+
+              <p className="risk-description">
+                {getRiskDescription()}
+              </p>
+
+              {/* =================================================
+                  RISK WARNINGS
+              ================================================= */}
 
               {result.warnings.length > 0 && (
 
@@ -537,7 +668,9 @@ function RiskChecker() {
 
               )}
 
-              {/* SAFE MESSAGE */}
+              {/* =================================================
+                  SAFE MESSAGE
+              ================================================= */}
 
               {result.warnings.length === 0 && (
 
@@ -552,7 +685,9 @@ function RiskChecker() {
 
               )}
 
-              {/* RECOMMENDATION */}
+              {/* =================================================
+                  RECOMMENDATION
+              ================================================= */}
 
               <div className="recommendation">
 
@@ -561,16 +696,14 @@ function RiskChecker() {
                 </strong>
 
                 <p>
-
-                  {result.level === "LOW"
-                    ? "You can proceed, but always verify the receiver before paying."
-                    : "Verify the receiver carefully and avoid sharing OTP, PIN or passwords."}
-
+                  {getRecommendation()}
                 </p>
 
               </div>
 
-              {/* DATABASE SAVE MESSAGE */}
+              {/* =================================================
+                  DATABASE SAVE MESSAGE
+              ================================================= */}
 
               <div className="saved-check-message">
 
@@ -580,6 +713,18 @@ function RiskChecker() {
                 secure transaction history.
 
               </div>
+
+              {/* =================================================
+                  CHECK AGAIN BUTTON
+              ================================================= */}
+
+              <button
+                type="button"
+                className="check-again-btn"
+                onClick={clearResult}
+              >
+                Check Another Payment
+              </button>
 
             </div>
 
