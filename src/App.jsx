@@ -33,7 +33,6 @@ function AppContent() {
 
   const navigate = useNavigate();
 
-
   /* =========================================================
      LOGIN STATE
   ========================================================= */
@@ -77,7 +76,7 @@ function AppContent() {
 
 
   /* =========================================================
-     MOBILE SIDEBAR STATE
+     MOBILE SIDEBAR
   ========================================================= */
 
   const [mobileMenuOpen, setMobileMenuOpen] =
@@ -309,7 +308,7 @@ function AppContent() {
 
 
   /* =========================================================
-     MENU ITEMS
+     SIDEBAR MENU ITEMS
   ========================================================= */
 
   const menuItems = [
@@ -351,7 +350,7 @@ function AppContent() {
 
 
       {/* =====================================================
-          MOBILE OVERLAY
+          MOBILE SIDEBAR OVERLAY
       ===================================================== */}
 
       {mobileMenuOpen && (
@@ -383,14 +382,12 @@ function AppContent() {
           onClick={closeMobileMenu}
           aria-label="Close navigation"
         >
-
           <X size={21} />
-
         </button>
 
 
         {/* =================================================
-            WEBSITE LOGO
+            LOGO
         ================================================= */}
 
         <div className="logo">
@@ -400,7 +397,6 @@ function AppContent() {
             alt="SmartPay Security Logo"
             className="brand-logo"
           />
-
 
           <div className="logo-text">
 
@@ -516,8 +512,6 @@ function AppContent() {
 
           ) : (
 
-            /* LOGIN */
-
             <NavLink
               to="/login"
               onClick={closeMobileMenu}
@@ -549,29 +543,48 @@ function AppContent() {
 
 
         {/* =================================================
-            TOP HEADER
+            TOPBAR
         ================================================= */}
 
         <header className="topbar">
 
 
-          {/* MOBILE HAMBURGER */}
+          {/* =================================================
+              MOBILE LEFT SECTION
+          ================================================= */}
 
-          <button
-            type="button"
-            className="mobile-menu-button"
-            onClick={() =>
-              setMobileMenuOpen(true)
-            }
-            aria-label="Open navigation"
-          >
+          <div className="mobile-header-left">
 
-            <Menu size={22} />
+            {/* HAMBURGER */}
 
-          </button>
+            <button
+              type="button"
+              className="mobile-menu-button"
+              onClick={() =>
+                setMobileMenuOpen(true)
+              }
+              aria-label="Open navigation"
+            >
+
+              <Menu size={22} />
+
+            </button>
 
 
-          {/* HEADER TITLE */}
+            {/* MOBILE LOGO */}
+
+            <img
+              src={smartPayLogo}
+              alt="SmartPay"
+              className="mobile-header-logo"
+            />
+
+          </div>
+
+
+          {/* =================================================
+              HEADER TITLE
+          ================================================= */}
 
           <div className="topbar-title">
 
@@ -590,7 +603,9 @@ function AppContent() {
           </div>
 
 
-          {/* PROFILE */}
+          {/* =================================================
+              PROFILE
+          ================================================= */}
 
           {isLoggedIn && (
 
@@ -622,7 +637,7 @@ function AppContent() {
               </div>
 
 
-              {/* PROFILE INFO */}
+              {/* PROFILE INFORMATION */}
 
               <div className="profile-info">
 

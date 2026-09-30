@@ -10434,3 +10434,70 @@ body:not(.light-mode) .profile-shield {
   }
 
 }
+/* =========================================================
+   MOBILE HEADER LOGO
+   ========================================================= */
+
+.mobile-header-left {
+  display: none;
+}
+
+@media (max-width: 768px) {
+
+  .mobile-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .mobile-header-logo {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    display: block;
+  }
+
+  .mobile-menu-button {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #d8e1eb;
+    border-radius: 10px;
+
+    background: #ffffff;
+    color: #172033;
+
+    cursor: pointer;
+  }
+
+  .topbar-title {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .topbar-title h1 {
+    font-size: 14px;
+  }
+
+}
+
+@media (max-width: 420px) {
+
+  .mobile-header-logo {
+    width: 30px;
+    height: 30px;
+  }
+
+  .mobile-menu-button {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+  }
+
+}
