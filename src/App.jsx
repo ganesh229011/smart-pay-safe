@@ -65,11 +65,11 @@ function AppContent() {
 
         parsedSettings.darkMode ?? false
       } catch {
-        return true;
+        return false;
       }
     }
 
-    return true;
+    return false;
   });
 
   useEffect(() => {

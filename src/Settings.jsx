@@ -21,9 +21,7 @@ function Settings() {
   ========================================================= */
 
   const getCurrentUser = () => {
-    const savedUser = localStorage.getItem(
-      "smartPayCurrentUser"
-    );
+    const savedUser = localStorage.getItem("smartPayCurrentUser");
 
     if (!savedUser) {
       return {
@@ -42,9 +40,7 @@ function Settings() {
     }
   };
 
-  const [currentUser, setCurrentUser] = useState(
-    getCurrentUser
-  );
+  const [currentUser, setCurrentUser] = useState(getCurrentUser);
 
   /* =========================================================
      ORIGINAL ACCOUNT NAME
@@ -81,7 +77,7 @@ function Settings() {
     displayName: originalName,
     paymentNotifications: true,
     securityAlerts: true,
-    darkMode: true,
+    darkMode: false,
   });
 
   /* =========================================================
@@ -129,15 +125,16 @@ function Settings() {
     const savedSettings =
       localStorage.getItem("smartPaySettings");
 
-    let darkMode = true;
+    let darkMode = false;
 
     if (savedSettings) {
       try {
         const parsed = JSON.parse(savedSettings);
 
-        darkMode = parsed.darkMode ?? true;
+        // Default theme is LIGHT
+        darkMode = parsed.darkMode ?? false;
       } catch {
-        darkMode = true;
+        darkMode = false;
       }
     }
 
@@ -267,7 +264,9 @@ function Settings() {
       displayName: originalName,
       paymentNotifications: true,
       securityAlerts: true,
-      darkMode: true,
+
+      // DEFAULT = LIGHT MODE
+      darkMode: false,
     };
 
     /* RESET SETTINGS STATE */
@@ -295,9 +294,9 @@ function Settings() {
       JSON.stringify(resetUser)
     );
 
-    /* APPLY DARK MODE */
+    /* APPLY LIGHT MODE */
 
-    document.body.classList.remove(
+    document.body.classList.add(
       "light-mode"
     );
 
