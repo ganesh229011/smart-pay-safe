@@ -63,7 +63,7 @@ function AppContent() {
         const parsedSettings =
           JSON.parse(savedSettings);
 
-        return parsedSettings.darkMode ?? true;
+        parsedSettings.darkMode ?? false
       } catch {
         return true;
       }
@@ -85,7 +85,7 @@ function AppContent() {
         localStorage.getItem("smartPaySettings");
 
       if (!savedSettings) {
-        setDarkMode(true);
+        setDarkMode(false);
         return;
       }
 
@@ -94,10 +94,10 @@ function AppContent() {
           JSON.parse(savedSettings);
 
         setDarkMode(
-          parsedSettings.darkMode ?? true
+          parsedSettings.darkMode ?? false
         );
       } catch {
-        setDarkMode(true);
+        setDarkMode(false);
       }
     };
 
