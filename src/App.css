@@ -9027,3 +9027,448 @@ body:not(.light-mode) .profile-shield {
   }
 
 }
+/* =========================================================
+   SMART PAY-SAFE
+   MOBILE SIDEBAR / HAMBURGER NAVIGATION
+   ========================================================= */
+
+.mobile-menu-button,
+.mobile-sidebar-close,
+.mobile-sidebar-overlay {
+  display: none;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+  /* -----------------------------------------
+     APP
+  ----------------------------------------- */
+
+  .app {
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+
+  /* -----------------------------------------
+     SIDEBAR
+  ----------------------------------------- */
+
+  .sidebar {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 280px;
+    height: 100vh;
+
+    z-index: 2000;
+
+    transform: translateX(-105%);
+
+    transition:
+      transform 0.28s ease,
+      box-shadow 0.28s ease;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    box-sizing: border-box;
+
+    box-shadow:
+      15px 0 40px rgba(0, 0, 0, 0.18);
+  }
+
+
+  /* OPEN SIDEBAR */
+
+  .sidebar.mobile-open {
+
+    transform: translateX(0);
+
+    box-shadow:
+      20px 0 50px rgba(0, 0, 0, 0.25);
+  }
+
+
+  /* -----------------------------------------
+     OVERLAY
+  ----------------------------------------- */
+
+  .mobile-sidebar-overlay {
+
+    display: block;
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 1900;
+
+    background: rgba(7, 15, 28, 0.48);
+
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+  }
+
+
+  /* -----------------------------------------
+     CLOSE BUTTON
+  ----------------------------------------- */
+
+  .mobile-sidebar-close {
+
+    display: flex;
+
+    position: absolute;
+
+    top: 14px;
+    right: 14px;
+
+    width: 38px;
+    height: 38px;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 11px;
+
+    background: rgba(255, 255, 255, 0.05);
+
+    color: #dbeafe;
+
+    cursor: pointer;
+
+    z-index: 5;
+
+    transition: 0.2s ease;
+  }
+
+
+  .mobile-sidebar-close:hover {
+
+    background: rgba(255, 255, 255, 0.1);
+
+    transform: scale(1.04);
+  }
+
+
+  /* -----------------------------------------
+     LOGO
+  ----------------------------------------- */
+
+  .sidebar .logo {
+
+    padding-right: 50px;
+  }
+
+
+  /* -----------------------------------------
+     NAVIGATION
+  ----------------------------------------- */
+
+  .sidebar .navigation {
+
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+  }
+
+
+  .sidebar .nav-item {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    flex-shrink: 0;
+  }
+
+
+  /* -----------------------------------------
+     MAIN CONTENT
+  ----------------------------------------- */
+
+  .main {
+
+    width: 100%;
+
+    min-width: 0;
+
+    margin-left: 0;
+
+    box-sizing: border-box;
+
+    overflow-x: hidden;
+  }
+
+
+  /* -----------------------------------------
+     TOPBAR
+  ----------------------------------------- */
+
+  .topbar {
+
+    width: 100%;
+
+    min-width: 0;
+
+    box-sizing: border-box;
+
+    gap: 10px;
+  }
+
+
+  /* -----------------------------------------
+     HAMBURGER BUTTON
+  ----------------------------------------- */
+
+  .mobile-menu-button {
+
+    display: flex;
+
+    flex-shrink: 0;
+
+    width: 40px;
+    height: 40px;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #d9e2ec;
+
+    border-radius: 11px;
+
+    background: #ffffff;
+
+    color: #24324a;
+
+    cursor: pointer;
+
+    box-shadow:
+      0 4px 12px rgba(30, 50, 80, 0.08);
+
+    transition: 0.2s ease;
+  }
+
+
+  .mobile-menu-button:active {
+
+    transform: scale(0.96);
+  }
+
+
+  /* -----------------------------------------
+     DARK MODE HAMBURGER
+  ----------------------------------------- */
+
+  body:not(.light-mode) .mobile-menu-button {
+
+    background: #101c2c;
+
+    border-color: #253851;
+
+    color: #dbeafe;
+
+    box-shadow:
+      0 5px 15px rgba(0, 0, 0, 0.2);
+  }
+
+
+  /* -----------------------------------------
+     TOPBAR TITLE
+  ----------------------------------------- */
+
+  .topbar-title {
+
+    min-width: 0;
+
+    flex: 1;
+  }
+
+
+  .topbar-title h1 {
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    font-size: 17px;
+  }
+
+
+  .topbar-subtitle {
+
+    font-size: 10px;
+  }
+
+
+  /* -----------------------------------------
+     PROFILE
+  ----------------------------------------- */
+
+  .profile {
+
+    flex-shrink: 0;
+
+    gap: 7px;
+  }
+
+
+  .profile-info {
+
+    display: none;
+  }
+
+
+  .avatar {
+
+    width: 34px;
+    height: 34px;
+
+    min-width: 34px;
+  }
+
+
+  .notification {
+
+    width: 34px;
+    height: 34px;
+  }
+
+
+  /* -----------------------------------------
+     PAGE CONTENT
+  ----------------------------------------- */
+
+  .main > * {
+
+    max-width: 100%;
+
+    box-sizing: border-box;
+  }
+
+
+  body {
+
+    overflow-x: hidden;
+  }
+
+
+  #root {
+
+    width: 100%;
+
+    max-width: 100%;
+
+    overflow-x: hidden;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+  .sidebar {
+
+    width: 270px;
+  }
+
+
+  .topbar {
+
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+
+  .mobile-menu-button {
+
+    width: 38px;
+    height: 38px;
+  }
+
+
+  .topbar-title h1 {
+
+    font-size: 15px;
+  }
+
+
+  .topbar-title .small-text {
+
+    font-size: 8px;
+  }
+
+
+  .topbar-subtitle {
+
+    display: none;
+  }
+
+
+  .avatar {
+
+    width: 32px;
+    height: 32px;
+
+    min-width: 32px;
+
+    font-size: 12px;
+  }
+
+
+  .notification {
+
+    width: 32px;
+    height: 32px;
+  }
+
+}
+
+
+/* =========================================================
+   LIGHT MODE SIDEBAR
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+  body.light-mode .sidebar {
+
+    background: #ffffff;
+
+    border-right: 1px solid #dbe4ee;
+
+    box-shadow:
+      15px 0 45px rgba(30, 50, 80, 0.15);
+  }
+
+
+  body.light-mode .mobile-sidebar-close {
+
+    background: #f5f8fc;
+
+    border-color: #dbe4ee;
+
+    color: #344054;
+  }
+
+}
