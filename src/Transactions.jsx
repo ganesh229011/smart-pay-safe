@@ -14,7 +14,9 @@ function Transactions() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  /* ================= LOAD TRANSACTIONS FROM MONGODB ================= */
+  /* =====================================================
+     LOAD TRANSACTIONS FROM MONGODB
+  ===================================================== */
 
   const loadTransactions = async () => {
     const token =
@@ -52,6 +54,7 @@ function Transactions() {
         );
 
         setTransactions([]);
+
         setError(
           data.message ||
             "Unable to load transaction history."
@@ -65,6 +68,7 @@ function Transactions() {
       } else {
         setTransactions([]);
       }
+
     } catch (error) {
       console.error(
         "Transaction API error:",
@@ -72,25 +76,31 @@ function Transactions() {
       );
 
       setTransactions([]);
+
       setError(
         "Unable to connect to the payment server."
       );
+
     } finally {
       setLoading(false);
     }
   };
 
-  /* ================= INITIAL LOAD ================= */
+  /* =====================================================
+     INITIAL LOAD
+  ===================================================== */
 
   useEffect(() => {
     loadTransactions();
 
     /* Refresh after Risk Checker saves transaction */
+
     const handleTransactionUpdate = () => {
       loadTransactions();
     };
 
     /* Refresh after login/logout */
+
     const handleAuthUpdate = () => {
       setSearch("");
       loadTransactions();
@@ -119,47 +129,54 @@ function Transactions() {
     };
   }, []);
 
-  /* ================= SEARCH ================= */
+  /* =====================================================
+     SEARCH
+  ===================================================== */
 
   const searchText =
     search.trim().toLowerCase();
 
   const filteredTransactions =
-    transactions.filter(
-      (transaction) => {
-        const receiver =
-          transaction.receiver
-            ?.toLowerCase() || "";
+    transactions.filter((transaction) => {
+      const receiver =
+        transaction.receiver
+          ?.toLowerCase() || "";
 
-        const type =
-          transaction.type
-            ?.toLowerCase() || "";
+      const type =
+        transaction.type
+          ?.toLowerCase() || "";
 
-        const status =
-          transaction.status
-            ?.toLowerCase() || "";
+      const status =
+        transaction.status
+          ?.toLowerCase() || "";
 
-        return (
-          receiver.includes(searchText) ||
-          type.includes(searchText) ||
-          status.includes(searchText)
-        );
-      }
-    );
+      const riskLevel =
+        transaction.riskLevel
+          ?.toLowerCase() || "";
 
-  /* ================= TOTAL AMOUNT ================= */
+      return (
+        receiver.includes(searchText) ||
+        type.includes(searchText) ||
+        status.includes(searchText) ||
+        riskLevel.includes(searchText)
+      );
+    });
+
+  /* =====================================================
+     TOTAL AMOUNT
+  ===================================================== */
 
   const totalAmount =
     transactions.reduce(
       (total, transaction) =>
         total +
-        Number(
-          transaction.amount || 0
-        ),
+        Number(transaction.amount || 0),
       0
     );
 
-  /* ================= SAFE COUNT ================= */
+  /* =====================================================
+     SAFE COUNT
+  ===================================================== */
 
   const safeCount =
     transactions.filter(
@@ -167,7 +184,9 @@ function Transactions() {
         transaction.status === "Safe"
     ).length;
 
-  /* ================= REVIEW COUNT ================= */
+  /* =====================================================
+     REVIEW COUNT
+  ===================================================== */
 
   const reviewCount =
     transactions.filter(
@@ -175,7 +194,9 @@ function Transactions() {
         transaction.status === "Review"
     ).length;
 
-  /* ================= DATE FORMAT ================= */
+  /* =====================================================
+     DATE FORMAT
+  ===================================================== */
 
   const formatDate = (transaction) => {
     if (!transaction.createdAt) {
@@ -200,7 +221,9 @@ function Transactions() {
     );
   };
 
-  /* ================= TIME FORMAT ================= */
+  /* =====================================================
+     TIME FORMAT
+  ===================================================== */
 
   const formatTime = (transaction) => {
     if (!transaction.createdAt) {
@@ -224,14 +247,31 @@ function Transactions() {
     );
   };
 
+  /* =====================================================
+     RISK LEVEL DISPLAY
+  ===================================================== */
+
+  const getRiskLevel = (transaction) => {
+    if (!transaction.riskLevel) {
+      return "";
+    }
+
+    return transaction.riskLevel
+      .toUpperCase()
+      .replace(/-/g, " ");
+  };
+
   return (
     <div className="transactions-page">
 
-      {/* ================= HEADER ================= */}
+      {/* =====================================================
+          HEADER
+      ===================================================== */}
 
       <div className="page-header">
 
         <div>
+
           <p className="page-label">
             PAYMENT ACTIVITY
           </p>
@@ -244,6 +284,7 @@ function Transactions() {
             Review your digital payment activity and
             safety status.
           </p>
+
         </div>
 
         <div className="transaction-count">
@@ -252,7 +293,9 @@ function Transactions() {
 
       </div>
 
-      {/* ================= SUMMARY ================= */}
+      {/* =====================================================
+          SUMMARY
+      ===================================================== */}
 
       <div className="transaction-stats">
 
@@ -265,6 +308,7 @@ function Transactions() {
           </div>
 
           <div>
+
             <span>
               TOTAL TRANSACTIONS
             </span>
@@ -272,6 +316,7 @@ function Transactions() {
             <strong>
               {transactions.length}
             </strong>
+
           </div>
 
         </div>
@@ -285,6 +330,7 @@ function Transactions() {
           </div>
 
           <div>
+
             <span>
               SAFE PAYMENTS
             </span>
@@ -292,6 +338,7 @@ function Transactions() {
             <strong>
               {safeCount}
             </strong>
+
           </div>
 
         </div>
@@ -305,6 +352,7 @@ function Transactions() {
           </div>
 
           <div>
+
             <span>
               NEEDS REVIEW
             </span>
@@ -312,6 +360,7 @@ function Transactions() {
             <strong>
               {reviewCount}
             </strong>
+
           </div>
 
         </div>
@@ -325,6 +374,7 @@ function Transactions() {
           </div>
 
           <div>
+
             <span>
               TOTAL AMOUNT
             </span>
@@ -335,13 +385,16 @@ function Transactions() {
                 "en-IN"
               )}
             </strong>
+
           </div>
 
         </div>
 
       </div>
 
-      {/* ================= TRANSACTION PANEL ================= */}
+      {/* =====================================================
+          TRANSACTION PANEL
+      ===================================================== */}
 
       <div className="transactions-panel">
 
@@ -350,6 +403,7 @@ function Transactions() {
         <div className="transactions-toolbar">
 
           <div>
+
             <h3>
               Recent Transactions
             </h3>
@@ -357,6 +411,7 @@ function Transactions() {
             <p>
               Your latest payment activity and risk checks
             </p>
+
           </div>
 
           {/* SEARCH */}
@@ -380,7 +435,9 @@ function Transactions() {
 
         </div>
 
-        {/* ================= TABLE HEADER ================= */}
+        {/* =====================================================
+            TABLE HEADER
+        ===================================================== */}
 
         <div className="transaction-table-header">
 
@@ -402,7 +459,9 @@ function Transactions() {
 
         </div>
 
-        {/* ================= LOADING ================= */}
+        {/* =====================================================
+            LOADING
+        ===================================================== */}
 
         {loading ? (
 
@@ -422,7 +481,9 @@ function Transactions() {
 
         ) : error ? (
 
-          /* ================= ERROR ================= */
+          /* =====================================================
+             ERROR
+          ===================================================== */
 
           <div className="no-transactions">
 
@@ -454,7 +515,9 @@ function Transactions() {
 
         ) : (
 
-          /* ================= TRANSACTION LIST ================= */
+          /* =====================================================
+             TRANSACTION LIST
+          ===================================================== */
 
           <div className="transaction-table">
 
@@ -483,17 +546,19 @@ function Transactions() {
 
                   <div
                     className="transaction-table-row"
-                    key={
-                      transaction._id
-                    }
+                    key={transaction._id}
                   >
 
-                    {/* PAYMENT */}
+                    {/* =================================================
+                        PAYMENT
+                    ================================================= */}
 
                     <div className="transaction-payment">
 
                       <div className="transaction-avatar">
+
                         <CreditCard size={18} />
+
                       </div>
 
                       <div>
@@ -504,6 +569,7 @@ function Transactions() {
                         </strong>
 
                         <span>
+
                           {transaction.type ||
                             "Payment"}
 
@@ -511,18 +577,21 @@ function Transactions() {
                             <>
                               {" • "}
                               Risk:{" "}
-                              {transaction.riskScore ??
-                                0}
-                              /100
+                              {getRiskLevel(
+                                transaction
+                              )}
                             </>
                           )}
+
                         </span>
 
                       </div>
 
                     </div>
 
-                    {/* DATE */}
+                    {/* =================================================
+                        DATE
+                    ================================================= */}
 
                     <span className="transaction-date">
 
@@ -533,16 +602,20 @@ function Transactions() {
                       </span>
 
                       <small className="transaction-time">
+
                         <Clock3 size={12} />
 
                         {formatTime(
                           transaction
                         )}
+
                       </small>
 
                     </span>
 
-                    {/* AMOUNT */}
+                    {/* =================================================
+                        AMOUNT
+                    ================================================= */}
 
                     <strong className="transaction-money">
 
@@ -555,7 +628,9 @@ function Transactions() {
 
                     </strong>
 
-                    {/* STATUS */}
+                    {/* =================================================
+                        STATUS
+                    ================================================= */}
 
                     <span
                       className={
@@ -568,13 +643,17 @@ function Transactions() {
 
                       {transaction.status ===
                       "Safe" ? (
+
                         <ShieldCheck
                           size={13}
                         />
+
                       ) : (
+
                         <AlertTriangle
                           size={13}
                         />
+
                       )}
 
                       {transaction.status ||
@@ -595,7 +674,9 @@ function Transactions() {
 
       </div>
 
-      {/* ================= SECURITY NOTE ================= */}
+      {/* =====================================================
+          SECURITY NOTE
+      ===================================================== */}
 
       <div className="transaction-security-note">
 

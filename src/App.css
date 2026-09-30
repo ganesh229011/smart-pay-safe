@@ -8195,3 +8195,577 @@ body.light-mode .header-security {
     padding-bottom: 20px;
   }
 }
+/* =========================================================
+   LOGIN + REGISTER - LIGHT THEME
+   ========================================================= */
+
+body.light-mode .auth-page {
+  background:
+    radial-gradient(
+      circle at 50% 15%,
+      rgba(34, 211, 238, 0.08),
+      transparent 38%
+    );
+}
+
+/* AUTH CARD */
+
+body.light-mode .auth-card {
+  background: #ffffff;
+  border-color: #dbe5ef;
+
+  box-shadow:
+    0 25px 70px rgba(15, 23, 42, 0.10),
+    0 0 50px rgba(34, 211, 238, 0.04);
+}
+
+/* LOGO TEXT */
+
+body.light-mode .auth-logo h2 {
+  color: #172033;
+}
+
+body.light-mode .auth-logo h2 span {
+  color: #0891b2;
+}
+
+body.light-mode .auth-logo p {
+  color: #64748b;
+}
+
+/* HEADING */
+
+body.light-mode .auth-heading h1 {
+  color: #172033;
+}
+
+body.light-mode .auth-heading p {
+  color: #64748b;
+}
+
+/* LABEL */
+
+body.light-mode .auth-input-group label {
+  color: #334155;
+}
+
+/* INPUT BOX */
+
+body.light-mode .auth-input-wrapper {
+  background: #f8fafc;
+  border-color: #d5dce5;
+  color: #64748b;
+}
+
+body.light-mode .auth-input-wrapper:focus-within {
+  background: #ffffff;
+  border-color: #06b6d4;
+
+  box-shadow:
+    0 0 0 3px rgba(6, 182, 212, 0.08);
+}
+
+/* INPUT TEXT */
+
+body.light-mode .auth-input-wrapper input {
+  color: #172033;
+}
+
+body.light-mode .auth-input-wrapper input::placeholder {
+  color: #94a3b8;
+}
+
+/* PASSWORD ICON */
+
+body.light-mode .password-toggle {
+  color: #64748b;
+}
+
+body.light-mode .password-toggle:hover {
+  color: #0891b2;
+}
+
+/* LOGIN BUTTON */
+
+body.light-mode .auth-submit-btn {
+  background: linear-gradient(
+    135deg,
+    #06b6d4,
+    #2563eb
+  );
+
+  color: #ffffff;
+}
+
+body.light-mode .auth-submit-btn:hover {
+  background: linear-gradient(
+    135deg,
+    #0891b2,
+    #2563eb
+  );
+
+  box-shadow:
+    0 10px 25px rgba(37, 99, 235, 0.18);
+}
+
+/* FOOTER */
+
+body.light-mode .auth-footer {
+  color: #64748b;
+}
+
+body.light-mode .auth-footer a {
+  color: #0891b2;
+}
+
+/* SECURITY MESSAGE */
+
+body.light-mode .auth-security {
+  border-top-color: #e5eaf0;
+  color: #64748b;
+}
+
+body.light-mode .auth-security svg {
+  color: #0891b2;
+}
+/* =========================================================
+   FINAL LIGHT MODE FIX
+   RISK CHECKER + FRAUD ALERTS + SAFETY CENTER
+   ========================================================= */
+
+
+/* =========================================================
+   RISK CHECKER
+   ========================================================= */
+
+body.light-mode .risk-page {
+  color: #172033;
+}
+
+body.light-mode .risk-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+
+body.light-mode .risk-form label {
+  color: #172033;
+}
+
+body.light-mode .risk-form label span {
+  color: #64748b;
+}
+
+
+/* Receiver + Amount input */
+
+body.light-mode .risk-form .input-wrapper {
+  background: #ffffff;
+  border-color: #d5dce5;
+  color: #64748b;
+}
+
+body.light-mode .risk-form .input-wrapper input {
+  background: transparent;
+  color: #172033;
+}
+
+body.light-mode .risk-form .input-wrapper input::placeholder {
+  color: #94a3b8;
+}
+
+
+/* Payment Message */
+
+body.light-mode .risk-form textarea {
+  background: #ffffff;
+  border-color: #d5dce5;
+  color: #172033;
+}
+
+body.light-mode .risk-form textarea::placeholder {
+  color: #94a3b8;
+}
+
+body.light-mode .risk-form textarea:focus {
+  background: #ffffff;
+  border-color: #06b6d4;
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.08);
+}
+
+
+/* Empty result */
+
+body.light-mode .result-card {
+  background: #ffffff;
+}
+
+body.light-mode .empty-result h3 {
+  color: #172033;
+}
+
+body.light-mode .empty-result p {
+  color: #64748b;
+}
+
+body.light-mode .empty-result-icon {
+  background: #ecfeff;
+  color: #0891b2;
+}
+
+
+/* =========================================================
+   FRAUD ALERTS
+   ========================================================= */
+
+body.light-mode .fraud-page {
+  color: #172033;
+}
+
+
+/* Search */
+
+body.light-mode .fraud-search {
+  background: #ffffff;
+  border-color: #d5dce5;
+  color: #64748b;
+}
+
+body.light-mode .fraud-search input {
+  background: transparent;
+  color: #172033;
+}
+
+body.light-mode .fraud-search input::placeholder {
+  color: #94a3b8;
+}
+
+
+/* Filter */
+
+body.light-mode .fraud-filter {
+  background: #ffffff;
+  border-color: #d5dce5;
+  color: #64748b;
+}
+
+body.light-mode .fraud-filter select {
+  background: transparent;
+  color: #172033;
+}
+
+body.light-mode .fraud-filter select option {
+  background: #ffffff;
+  color: #172033;
+}
+
+
+/* Fraud cards */
+
+body.light-mode .fraud-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+
+body.light-mode .fraud-card-main {
+  color: #172033;
+}
+
+body.light-mode .fraud-title-row h4 {
+  color: #172033;
+}
+
+body.light-mode .fraud-card-content > p {
+  color: #64748b;
+}
+
+body.light-mode .fraud-category {
+  color: #64748b;
+}
+
+body.light-mode .fraud-card-details {
+  background: #f8fafc;
+  border-top-color: #e8edf3;
+  color: #334155;
+}
+
+
+/* Empty fraud result */
+
+body.light-mode .fraud-empty {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  color: #64748b;
+}
+
+body.light-mode .fraud-empty h3 {
+  color: #172033;
+}
+
+body.light-mode .fraud-empty p {
+  color: #64748b;
+}
+
+
+/* Awareness */
+
+body.light-mode .fraud-awareness {
+  background: #f0fdff;
+  border-color: #c7f3f8;
+}
+
+body.light-mode .fraud-awareness strong {
+  color: #172033;
+}
+
+body.light-mode .fraud-awareness p {
+  color: #64748b;
+}
+
+
+/* =========================================================
+   SAFETY CENTER
+   ========================================================= */
+
+body.light-mode .safety-page {
+  color: #172033;
+}
+
+
+/* Safety Hero */
+
+body.light-mode .safety-hero {
+  background:
+    radial-gradient(
+      circle at 85% 20%,
+      rgba(34, 211, 238, 0.10),
+      transparent 35%
+    ),
+    #ffffff;
+
+  border-color: #cfeaf0;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+}
+
+
+/* Hero icon */
+
+body.light-mode .safety-hero-icon {
+  background: #ecfeff;
+  color: #0891b2;
+  box-shadow: none;
+}
+
+
+/* Hero heading */
+
+body.light-mode .safety-hero-content h3 {
+  color: #172033;
+}
+
+body.light-mode .safety-hero-content p {
+  color: #64748b;
+}
+
+
+/* Security status */
+
+body.light-mode .safety-score {
+  background: #f8fafc;
+  border-color: #dbe5ef;
+}
+
+body.light-mode .safety-score span {
+  color: #64748b;
+}
+
+body.light-mode .safety-score strong {
+  color: #0891b2;
+}
+
+body.light-mode .safety-score small {
+  color: #64748b;
+}
+
+
+/* Safety search */
+
+body.light-mode .safety-search {
+  background: #ffffff;
+  border-color: #d5dce5;
+  color: #64748b;
+}
+
+body.light-mode .safety-search input {
+  background: transparent;
+  color: #172033;
+}
+
+body.light-mode .safety-search input::placeholder {
+  color: #94a3b8;
+}
+
+
+/* Safety tips */
+
+body.light-mode .safety-tip {
+  background: #ffffff;
+  border-color: #e2e8f0;
+}
+
+body.light-mode .safety-tip-button {
+  color: #172033;
+}
+
+body.light-mode .tip-title-row h4 {
+  color: #172033;
+}
+
+body.light-mode .tip-content h4 {
+  color: #172033;
+}
+
+body.light-mode .tip-content p {
+  color: #64748b;
+}
+
+body.light-mode .tip-chevron {
+  color: #94a3b8;
+}
+
+
+/* Emergency */
+
+body.light-mode .emergency-card {
+  background: #fff7f7;
+  border-color: #fecaca;
+}
+
+body.light-mode .emergency-card h3,
+body.light-mode .emergency-card strong {
+  color: #172033;
+}
+
+body.light-mode .emergency-card p {
+  color: #64748b;
+}
+/* =========================================================
+   PREMIUM USER PROFILE - SMART PAY-SAFE
+   ========================================================= */
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  min-width: 150px;
+}
+
+/* User Name */
+
+.profile-info .profile-name {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  margin: 0;
+
+  color: #172033;
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.2;
+  letter-spacing: -0.15px;
+}
+
+/* Online / Protected indicator */
+
+.profile-online-dot {
+  width: 7px;
+  height: 7px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #22c55e;
+
+  box-shadow:
+    0 0 0 3px rgba(34, 197, 94, 0.10),
+    0 0 10px rgba(34, 197, 94, 0.35);
+}
+
+
+/* Protected Account */
+
+.profile-info .profile-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  margin: 0;
+
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 600;
+
+  letter-spacing: 0.15px;
+}
+
+/* Small security symbol */
+
+.profile-shield {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 13px;
+  height: 13px;
+
+  color: #0891b2;
+
+  font-size: 8px;
+}
+
+
+/* =========================================================
+   LIGHT MODE
+   ========================================================= */
+
+body.light-mode .profile-info .profile-name {
+  color: #172033;
+}
+
+body.light-mode .profile-info .profile-status {
+  color: #64748b;
+}
+
+body.light-mode .profile-shield {
+  color: #0891b2;
+}
+
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+body:not(.light-mode) .profile-info .profile-name {
+  color: #f8fbff;
+}
+
+body:not(.light-mode) .profile-info .profile-status {
+  color: #94a3b8;
+}
+
+body:not(.light-mode) .profile-shield {
+  color: #22d3ee;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+  .profile-info {
+    min-width: 0;
+  }
+}

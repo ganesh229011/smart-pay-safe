@@ -383,15 +383,17 @@ function AppContent() {
 
               <div className="profile-info">
 
-                <strong>
-                  {currentUser.name || "User"}
-                </strong>
+  <strong className="profile-name">
+    {currentUser.name || "User"}
+    <span className="profile-online-dot"></span>
+  </strong>
 
-                <span>
-                  Protected Account
-                </span>
+  <span className="profile-status">
+    <span className="profile-shield">◆</span>
+    Protected Account
+  </span>
 
-              </div>
+</div>
 
             </div>
           )}

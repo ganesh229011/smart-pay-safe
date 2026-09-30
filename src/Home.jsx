@@ -209,28 +209,22 @@ function Home() {
 
             </div>
 
-            {/* RISK SCORE */}
+            {/* RISK STATUS */}
 
             <div className="risk-box">
 
               <div>
 
                 <p className="label">
-                  PAYMENT RISK SCORE
+                  PAYMENT RISK STATUS
                 </p>
 
                 <div className="risk-number">
-
-                  18
-
-                  <span>
-                    /100
-                  </span>
-
+                  LOW RISK
                 </div>
 
                 <small>
-                  Low risk detected
+                  No major suspicious signals detected
                 </small>
 
               </div>
@@ -239,12 +233,6 @@ function Home() {
                 LOW
               </div>
 
-            </div>
-
-            {/* RISK PROGRESS */}
-
-            <div className="risk-progress">
-              <div></div>
             </div>
 
             {/* RECEIVER */}
@@ -475,6 +463,7 @@ function Home() {
   );
 }
 
+
 /* =========================================================
    FEATURE CARD
 ========================================================= */
@@ -533,6 +522,7 @@ function FeatureCard({
   );
 }
 
+
 /* =========================================================
    STEP
 ========================================================= */
@@ -564,5 +554,6 @@ function Step({
   );
 
 }
+
 
 export default Home;

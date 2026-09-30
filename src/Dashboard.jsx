@@ -18,8 +18,7 @@ function Dashboard() {
   /* ================= LOAD TRANSACTIONS FROM MONGODB ================= */
 
   const loadTransactions = async () => {
-    const token =
-      localStorage.getItem("smartPayToken");
+    const token = localStorage.getItem("smartPayToken");
 
     if (!token) {
       setTransactions([]);
@@ -72,12 +71,10 @@ function Dashboard() {
   useEffect(() => {
     loadTransactions();
 
-    /* Refresh after Risk Checker saves transaction */
     const handleTransactionUpdate = () => {
       loadTransactions();
     };
 
-    /* Refresh after login/logout */
     const handleAuthUpdate = () => {
       loadTransactions();
     };
@@ -107,31 +104,27 @@ function Dashboard() {
 
   /* ================= STATS ================= */
 
-  const totalTransactions =
-    transactions.length;
+  const totalTransactions = transactions.length;
 
-  const safeTransactions =
-    transactions.filter(
-      (transaction) =>
-        transaction.status === "Safe"
-    ).length;
+  const safeTransactions = transactions.filter(
+    (transaction) =>
+      transaction.status === "Safe"
+  ).length;
 
-  const reviewTransactions =
-    transactions.filter(
-      (transaction) =>
-        transaction.status === "Review"
-    ).length;
+  const reviewTransactions = transactions.filter(
+    (transaction) =>
+      transaction.status === "Review"
+  ).length;
 
   /* ================= RISK CHECKS ================= */
 
-  const riskChecks =
-    transactions.filter(
-      (transaction) =>
-        transaction.type === "Risk Check" ||
-        transaction.riskLevel
-    ).length;
+  const riskChecks = transactions.filter(
+    (transaction) =>
+      transaction.type === "Risk Check" ||
+      transaction.riskLevel
+  ).length;
 
-  /* ================= SAFETY SCORE ================= */
+  /* ================= SAFETY STATUS ================= */
 
   const safetyScore =
     totalTransactions === 0
@@ -147,8 +140,6 @@ function Dashboard() {
             )
           )
         );
-
-  /* ================= SAFETY LEVEL ================= */
 
   let safetyLevel = "Excellent";
 
@@ -202,14 +193,14 @@ function Dashboard() {
 
       <div className="dashboard-stats">
 
-        {/* SAFETY SCORE */}
+        {/* SAFETY STATUS */}
 
         <div className="dashboard-card">
 
           <div className="card-top">
 
             <span>
-              SAFETY SCORE
+              SECURITY STATUS
             </span>
 
             <ShieldCheck />
@@ -217,20 +208,14 @@ function Dashboard() {
           </div>
 
           <h3>
-
-            {safetyScore}
-
-            <span>
-              /100
-            </span>
-
+            {safetyLevel}
           </h3>
 
           <div className="stat-change positive">
 
             <TrendingUp size={14} />
 
-            {safetyLevel}
+            Payment protection active
 
           </div>
 
@@ -280,9 +265,7 @@ function Dashboard() {
 
           <div className="stat-change positive">
 
-            {safeTransactions}
-            {" "}
-            safe payments
+            {safeTransactions} safe payments
 
           </div>
 
@@ -303,11 +286,9 @@ function Dashboard() {
           </div>
 
           <h3>
-
             {String(
               reviewTransactions
             ).padStart(2, "0")}
-
           </h3>
 
           <div className="stat-change warning">
@@ -326,7 +307,7 @@ function Dashboard() {
 
       <div className="dashboard-grid">
 
-        {/* SAFETY SCORE */}
+        {/* SECURITY STATUS */}
 
         <div className="dashboard-panel safety-panel">
 
@@ -339,7 +320,7 @@ function Dashboard() {
               </p>
 
               <h3>
-                Your Safety Score
+                Your Payment Security
               </h3>
 
             </div>
@@ -352,13 +333,7 @@ function Dashboard() {
 
             <div className="score-circle">
 
-              <strong>
-                {safetyScore}
-              </strong>
-
-              <span>
-                /100
-              </span>
+              <ShieldCheck size={42} />
 
             </div>
 
@@ -580,8 +555,8 @@ function Dashboard() {
                   status={
                     transaction.status
                   }
-                  riskScore={
-                    transaction.riskScore
+                  riskLevel={
+                    transaction.riskLevel
                   }
                 />
 
@@ -605,7 +580,7 @@ function Transaction({
   type,
   amount,
   status,
-  riskScore,
+  riskLevel,
 }) {
   return (
     <div className="transaction-row">
@@ -626,11 +601,10 @@ function Transaction({
 
           {type || "Payment"}
 
-          {riskScore !== undefined && (
+          {riskLevel && (
             <>
-              {" • Risk "}
-              {riskScore}
-              /100
+              {" • "}
+              {riskLevel} Risk
             </>
           )}
 

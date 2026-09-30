@@ -9,7 +9,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-import smartPaySquareLogo from "./assets/smartpay-square.png";
+import smartPaySquareLogo from "./assets/smartpay-lr.png";
 
 function Login() {
   const navigate = useNavigate();
@@ -22,15 +22,27 @@ function Login() {
     password: "",
   });
 
+  /* =====================================================
+     HANDLE INPUT CHANGE
+  ===================================================== */
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
+
+  /* =====================================================
+     HANDLE LOGIN
+  ===================================================== */
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (loading) return;
 
     setLoading(true);
 
@@ -52,13 +64,13 @@ function Login() {
       const data = await response.json();
 
       if (!response.ok) {
-        alert(
-          data.message ||
-            "Invalid email or password."
-        );
-
+        alert(data.message || "Invalid email or password.");
         return;
       }
+
+      /* =====================================================
+         SAVE LOGIN SESSION
+      ===================================================== */
 
       localStorage.setItem(
         "smartPayToken",
@@ -70,17 +82,30 @@ function Login() {
         JSON.stringify(data.user)
       );
 
+      /* =====================================================
+         UPDATE AUTH STATE
+      ===================================================== */
+
       window.dispatchEvent(
         new Event("authUpdated")
       );
+
+      /* =====================================================
+         SUCCESS MESSAGE
+      ===================================================== */
 
       alert(
         `Welcome back, ${data.user.name}!`
       );
 
+      /* =====================================================
+         REDIRECT TO HOME
+      ===================================================== */
+
       navigate("/", {
         replace: true,
       });
+
     } catch (error) {
       console.error(
         "Login error:",
@@ -90,6 +115,7 @@ function Login() {
       alert(
         "Unable to connect to server. Please try again."
       );
+
     } finally {
       setLoading(false);
     }
@@ -102,7 +128,7 @@ function Login() {
 
         {/* =====================================================
             AUTH LOGO
-        ====================================================== */}
+        ===================================================== */}
 
         <div className="auth-logo">
 
@@ -137,7 +163,7 @@ function Login() {
 
         {/* =====================================================
             HEADING
-        ====================================================== */}
+        ===================================================== */}
 
         <div className="auth-heading">
 
@@ -154,18 +180,20 @@ function Login() {
 
         {/* =====================================================
             LOGIN FORM
-        ====================================================== */}
+        ===================================================== */}
 
         <form
           className="auth-form"
           onSubmit={handleSubmit}
         >
 
-          {/* EMAIL */}
+          {/* =====================================================
+              EMAIL
+          ===================================================== */}
 
           <div className="auth-input-group">
 
-            <label>
+            <label htmlFor="login-email">
               Email Address
             </label>
 
@@ -174,11 +202,13 @@ function Login() {
               <Mail size={18} />
 
               <input
+                id="login-email"
                 type="email"
                 name="email"
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
+                autoComplete="email"
                 required
               />
 
@@ -186,11 +216,13 @@ function Login() {
 
           </div>
 
-          {/* PASSWORD */}
+          {/* =====================================================
+              PASSWORD
+          ===================================================== */}
 
           <div className="auth-input-group">
 
-            <label>
+            <label htmlFor="login-password">
               Password
             </label>
 
@@ -199,6 +231,7 @@ function Login() {
               <LockKeyhole size={18} />
 
               <input
+                id="login-password"
                 type={
                   showPassword
                     ? "text"
@@ -208,6 +241,7 @@ function Login() {
                 placeholder="Enter your password"
                 value={formData.password}
                 onChange={handleChange}
+                autoComplete="current-password"
                 required
               />
 
@@ -215,9 +249,7 @@ function Login() {
                 type="button"
                 className="password-toggle"
                 onClick={() =>
-                  setShowPassword(
-                    !showPassword
-                  )
+                  setShowPassword((prev) => !prev)
                 }
                 aria-label={
                   showPassword
@@ -236,7 +268,9 @@ function Login() {
 
           </div>
 
-          {/* LOGIN BUTTON */}
+          {/* =====================================================
+              LOGIN BUTTON
+          ===================================================== */}
 
           <button
             type="submit"
@@ -258,7 +292,7 @@ function Login() {
 
         {/* =====================================================
             FOOTER
-        ====================================================== */}
+        ===================================================== */}
 
         <div className="auth-footer">
 
@@ -274,7 +308,7 @@ function Login() {
 
         {/* =====================================================
             SECURITY MESSAGE
-        ====================================================== */}
+        ===================================================== */}
 
         <div className="auth-security">
 

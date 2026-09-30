@@ -69,9 +69,9 @@ function Settings() {
     return originalName;
   };
 
-  const [originalName] = useState(() => {
-    return getOriginalName(getCurrentUser());
-  });
+  const [originalName] = useState(() =>
+    getOriginalName(getCurrentUser())
+  );
 
   /* =========================================================
      DEFAULT SETTINGS
@@ -102,7 +102,6 @@ function Settings() {
       return {
         ...getDefaultSettings(),
         ...parsed,
-
         displayName:
           parsed.displayName?.trim() ||
           originalName,
@@ -113,7 +112,7 @@ function Settings() {
   };
 
   /* =========================================================
-     DRAFT SETTINGS
+     SETTINGS STATE
   ========================================================= */
 
   const [settings, setSettings] = useState(
@@ -123,7 +122,7 @@ function Settings() {
   const [saved, setSaved] = useState(false);
 
   /* =========================================================
-     APPLY SAVED THEME WHEN PAGE LOADS
+     APPLY SAVED THEME
   ========================================================= */
 
   useEffect(() => {
@@ -201,18 +200,14 @@ function Settings() {
       displayName: finalName,
     };
 
-    /* -----------------------------------------
-       SAVE SETTINGS
-    ----------------------------------------- */
+    /* SAVE SETTINGS */
 
     localStorage.setItem(
       "smartPaySettings",
       JSON.stringify(updatedSettings)
     );
 
-    /* -----------------------------------------
-       UPDATE CURRENT USER
-    ----------------------------------------- */
+    /* UPDATE CURRENT USER */
 
     const updatedUser = {
       ...currentUser,
@@ -224,25 +219,19 @@ function Settings() {
       JSON.stringify(updatedUser)
     );
 
-    /* -----------------------------------------
-       UPDATE REACT STATE
-    ----------------------------------------- */
+    /* UPDATE REACT STATE */
 
     setCurrentUser(updatedUser);
     setSettings(updatedSettings);
 
-    /* -----------------------------------------
-       APPLY THEME
-    ----------------------------------------- */
+    /* APPLY THEME */
 
     document.body.classList.toggle(
       "light-mode",
       !updatedSettings.darkMode
     );
 
-    /* -----------------------------------------
-       NOTIFY APP
-    ----------------------------------------- */
+    /* NOTIFY APP */
 
     window.dispatchEvent(
       new Event("themeUpdated")
@@ -252,9 +241,7 @@ function Settings() {
       new Event("userUpdated")
     );
 
-    /* -----------------------------------------
-       SUCCESS MESSAGE
-    ----------------------------------------- */
+    /* SUCCESS MESSAGE */
 
     setSaved(true);
 
@@ -276,10 +263,6 @@ function Settings() {
       return;
     }
 
-    /* -----------------------------------------
-       DEFAULT DATA
-    ----------------------------------------- */
-
     const resetData = {
       displayName: originalName,
       paymentNotifications: true,
@@ -287,24 +270,18 @@ function Settings() {
       darkMode: true,
     };
 
-    /* -----------------------------------------
-       RESET SETTINGS STATE
-    ----------------------------------------- */
+    /* RESET SETTINGS STATE */
 
     setSettings(resetData);
 
-    /* -----------------------------------------
-       SAVE RESET SETTINGS
-    ----------------------------------------- */
+    /* SAVE RESET SETTINGS */
 
     localStorage.setItem(
       "smartPaySettings",
       JSON.stringify(resetData)
     );
 
-    /* -----------------------------------------
-       RESET PROFILE NAME
-    ----------------------------------------- */
+    /* RESET PROFILE NAME */
 
     const resetUser = {
       ...currentUser,
@@ -318,17 +295,13 @@ function Settings() {
       JSON.stringify(resetUser)
     );
 
-    /* -----------------------------------------
-       APPLY DARK MODE
-    ----------------------------------------- */
+    /* APPLY DARK MODE */
 
     document.body.classList.remove(
       "light-mode"
     );
 
-    /* -----------------------------------------
-       NOTIFY APP
-    ----------------------------------------- */
+    /* NOTIFY APP */
 
     window.dispatchEvent(
       new Event("themeUpdated")
@@ -338,9 +311,7 @@ function Settings() {
       new Event("userUpdated")
     );
 
-    /* -----------------------------------------
-       SUCCESS MESSAGE
-    ----------------------------------------- */
+    /* SUCCESS MESSAGE */
 
     setSaved(true);
 
@@ -362,9 +333,7 @@ function Settings() {
       return;
     }
 
-    /* -----------------------------------------
-       GET JWT TOKEN
-    ----------------------------------------- */
+    /* GET JWT TOKEN */
 
     const token =
       localStorage.getItem("smartPayToken");
@@ -378,15 +347,12 @@ function Settings() {
     }
 
     try {
-      /* -----------------------------------------
-         DELETE CURRENT USER TRANSACTIONS
-      ----------------------------------------- */
+      /* DELETE CURRENT USER TRANSACTIONS */
 
       const response = await fetch(
         "https://smart-pay-safe.onrender.com/api/transactions/clear",
         {
           method: "DELETE",
-
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -395,9 +361,7 @@ function Settings() {
 
       const data = await response.json();
 
-      /* -----------------------------------------
-         HANDLE AUTH ERROR
-      ----------------------------------------- */
+      /* HANDLE AUTH ERROR */
 
       if (response.status === 401) {
         localStorage.removeItem(
@@ -419,9 +383,7 @@ function Settings() {
         return;
       }
 
-      /* -----------------------------------------
-         HANDLE OTHER ERRORS
-      ----------------------------------------- */
+      /* HANDLE OTHER ERRORS */
 
       if (!response.ok) {
         throw new Error(
@@ -430,23 +392,20 @@ function Settings() {
         );
       }
 
-      /* -----------------------------------------
-         UPDATE DASHBOARD,
-         TRANSACTIONS & SAFETY CENTER
-      ----------------------------------------- */
+      /* UPDATE DASHBOARD,
+         TRANSACTIONS & OTHER PAGES */
 
       window.dispatchEvent(
         new Event("transactionsUpdated")
       );
 
-      /* -----------------------------------------
-         SUCCESS
-      ----------------------------------------- */
+      /* SUCCESS */
 
       alert(
         data.message ||
           "Transaction history cleared successfully."
       );
+
     } catch (error) {
       console.error(
         "Clear transaction history error:",
@@ -468,7 +427,9 @@ function Settings() {
 
       <div className="settings-page-modern">
 
-        {/* ================= HEADER ================= */}
+        {/* =====================================================
+            HEADER
+        ===================================================== */}
 
         <div className="settings-modern-header">
 
@@ -501,7 +462,9 @@ function Settings() {
 
         </div>
 
-        {/* ================= PROFILE ================= */}
+        {/* =====================================================
+            PROFILE
+        ===================================================== */}
 
         <section className="settings-modern-card">
 
@@ -537,7 +500,7 @@ function Settings() {
 
             <div className="profile-modern-form">
 
-              <label>
+              <label htmlFor="display-name">
                 Display Name
               </label>
 
@@ -546,6 +509,7 @@ function Settings() {
                 <User size={17} />
 
                 <input
+                  id="display-name"
                   type="text"
                   value={settings.displayName}
                   onChange={(e) =>
@@ -582,7 +546,9 @@ function Settings() {
 
         </section>
 
-        {/* ================= NOTIFICATIONS ================= */}
+        {/* =====================================================
+            NOTIFICATIONS
+        ===================================================== */}
 
         <section className="settings-modern-card">
 
@@ -643,9 +609,7 @@ function Settings() {
                 }
                 aria-label="Toggle payment notifications"
               >
-
                 <span></span>
-
               </button>
 
             </div>
@@ -685,9 +649,7 @@ function Settings() {
                 }
                 aria-label="Toggle security alerts"
               >
-
                 <span></span>
-
               </button>
 
             </div>
@@ -696,7 +658,9 @@ function Settings() {
 
         </section>
 
-        {/* ================= SECURITY ================= */}
+        {/* =====================================================
+            SECURITY
+        ===================================================== */}
 
         <section className="settings-modern-card">
 
@@ -796,9 +760,7 @@ function Settings() {
                 }
                 aria-label="Toggle dark mode"
               >
-
                 <span></span>
-
               </button>
 
             </div>
@@ -807,7 +769,9 @@ function Settings() {
 
         </section>
 
-        {/* ================= PRIVACY ================= */}
+        {/* =====================================================
+            DATA & PRIVACY
+        ===================================================== */}
 
         <section className="settings-modern-card">
 
@@ -903,7 +867,9 @@ function Settings() {
 
         </section>
 
-        {/* ================= SECURITY INFO ================= */}
+        {/* =====================================================
+            SECURITY INFO
+        ===================================================== */}
 
         <div className="modern-security-banner">
 
@@ -931,7 +897,9 @@ function Settings() {
 
         </div>
 
-        {/* ================= ACTIONS ================= */}
+        {/* =====================================================
+            ACTIONS
+        ===================================================== */}
 
         <div className="modern-settings-actions">
 

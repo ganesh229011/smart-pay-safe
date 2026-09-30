@@ -11,7 +11,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-import smartPaySquareLogo from "./assets/smartpay-square.png";
+import smartPaySquareLogo from "./assets/smartpay-lr.png";
 
 function Register() {
   const navigate = useNavigate();
@@ -25,21 +25,37 @@ function Register() {
     password: "",
   });
 
+  /* =====================================================
+     HANDLE INPUT CHANGE
+  ===================================================== */
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
+
+  /* =====================================================
+     HANDLE REGISTRATION
+  ===================================================== */
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (loading) return;
 
     const cleanedData = {
       name: formData.name.trim(),
       email: formData.email.trim().toLowerCase(),
       password: formData.password,
     };
+
+    /* =====================================================
+       BASIC VALIDATION
+    ===================================================== */
 
     if (!cleanedData.name) {
       alert("Please enter your full name.");
@@ -52,7 +68,9 @@ function Register() {
     }
 
     if (cleanedData.password.length < 6) {
-      alert("Password must contain at least 6 characters.");
+      alert(
+        "Password must contain at least 6 characters."
+      );
       return;
     }
 
@@ -72,10 +90,22 @@ function Register() {
 
       const data = await response.json();
 
+      /* =====================================================
+         HANDLE SERVER ERROR
+      ===================================================== */
+
       if (!response.ok) {
-        alert(data.message || "Registration failed.");
+        alert(
+          data.message ||
+            "Registration failed. Please try again."
+        );
+
         return;
       }
+
+      /* =====================================================
+         SAVE USER INFORMATION
+      ===================================================== */
 
       localStorage.setItem(
         "smartPayOriginalName",
@@ -92,13 +122,28 @@ function Register() {
         JSON.stringify(registeredUser)
       );
 
-      localStorage.removeItem("smartPaySettings");
+      /* =====================================================
+         RESET OLD SETTINGS
+      ===================================================== */
+
+      localStorage.removeItem(
+        "smartPaySettings"
+      );
+
+      /* =====================================================
+         SUCCESS MESSAGE
+      ===================================================== */
 
       alert(
         "Account created successfully! Please login."
       );
 
+      /* =====================================================
+         REDIRECT TO LOGIN
+      ===================================================== */
+
       navigate("/login");
+
     } catch (error) {
       console.error(
         "Registration error:",
@@ -108,6 +153,7 @@ function Register() {
       alert(
         "Unable to connect to server. Please try again."
       );
+
     } finally {
       setLoading(false);
     }
@@ -120,7 +166,7 @@ function Register() {
 
         {/* =====================================================
             AUTH LOGO
-        ====================================================== */}
+        ===================================================== */}
 
         <div className="auth-logo">
 
@@ -142,6 +188,7 @@ function Register() {
           />
 
           <div>
+
             <h2>
               Smart<span>Pay</span>
             </h2>
@@ -149,13 +196,14 @@ function Register() {
             <p>
               SAFE PAYMENTS
             </p>
+
           </div>
 
         </div>
 
         {/* =====================================================
             HEADING
-        ====================================================== */}
+        ===================================================== */}
 
         <div className="auth-heading">
 
@@ -172,18 +220,20 @@ function Register() {
 
         {/* =====================================================
             REGISTER FORM
-        ====================================================== */}
+        ===================================================== */}
 
         <form
           className="auth-form"
           onSubmit={handleSubmit}
         >
 
-          {/* FULL NAME */}
+          {/* =====================================================
+              FULL NAME
+          ===================================================== */}
 
           <div className="auth-input-group">
 
-            <label>
+            <label htmlFor="register-name">
               Full Name
             </label>
 
@@ -192,11 +242,13 @@ function Register() {
               <User size={18} />
 
               <input
+                id="register-name"
                 type="text"
                 name="name"
                 placeholder="Enter your name"
                 value={formData.name}
                 onChange={handleChange}
+                autoComplete="name"
                 required
               />
 
@@ -204,11 +256,13 @@ function Register() {
 
           </div>
 
-          {/* EMAIL */}
+          {/* =====================================================
+              EMAIL
+          ===================================================== */}
 
           <div className="auth-input-group">
 
-            <label>
+            <label htmlFor="register-email">
               Email Address
             </label>
 
@@ -217,11 +271,13 @@ function Register() {
               <Mail size={18} />
 
               <input
+                id="register-email"
                 type="email"
                 name="email"
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
+                autoComplete="email"
                 required
               />
 
@@ -229,11 +285,13 @@ function Register() {
 
           </div>
 
-          {/* PASSWORD */}
+          {/* =====================================================
+              PASSWORD
+          ===================================================== */}
 
           <div className="auth-input-group">
 
-            <label>
+            <label htmlFor="register-password">
               Password
             </label>
 
@@ -242,6 +300,7 @@ function Register() {
               <LockKeyhole size={18} />
 
               <input
+                id="register-password"
                 type={
                   showPassword
                     ? "text"
@@ -252,6 +311,7 @@ function Register() {
                 value={formData.password}
                 onChange={handleChange}
                 minLength={6}
+                autoComplete="new-password"
                 required
               />
 
@@ -260,7 +320,7 @@ function Register() {
                 className="password-toggle"
                 onClick={() =>
                   setShowPassword(
-                    !showPassword
+                    (prev) => !prev
                   )
                 }
                 aria-label={
@@ -269,18 +329,22 @@ function Register() {
                     : "Show password"
                 }
               >
+
                 {showPassword ? (
                   <EyeOff size={18} />
                 ) : (
                   <Eye size={18} />
                 )}
+
               </button>
 
             </div>
 
           </div>
 
-          {/* PASSWORD INFO */}
+          {/* =====================================================
+              PASSWORD INFO
+          ===================================================== */}
 
           <div className="password-info">
 
@@ -292,7 +356,9 @@ function Register() {
 
           </div>
 
-          {/* REGISTER BUTTON */}
+          {/* =====================================================
+              REGISTER BUTTON
+          ===================================================== */}
 
           <button
             type="submit"
@@ -314,7 +380,7 @@ function Register() {
 
         {/* =====================================================
             FOOTER
-        ====================================================== */}
+        ===================================================== */}
 
         <div className="auth-footer">
 
@@ -330,7 +396,7 @@ function Register() {
 
         {/* =====================================================
             SECURITY MESSAGE
-        ====================================================== */}
+        ===================================================== */}
 
         <div className="auth-security">
 

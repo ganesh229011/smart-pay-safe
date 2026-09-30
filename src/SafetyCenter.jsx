@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   ShieldCheck,
   LockKeyhole,
@@ -16,124 +16,10 @@ import {
 function SafetyCenter() {
   const [openTip, setOpenTip] = useState(null);
   const [search, setSearch] = useState("");
-  const [safetyScore, setSafetyScore] = useState(92);
-  const [loading, setLoading] = useState(true);
 
-  /* ================= LOAD TRANSACTIONS FROM MONGODB ================= */
-
-  const calculateSafetyScore = async () => {
-    const token =
-      localStorage.getItem("smartPayToken");
-
-    if (!token) {
-      setSafetyScore(92);
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        "https://smart-pay-safe.onrender.com/api/transactions",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        console.error(
-          "Safety Center transaction fetch failed:",
-          data
-        );
-
-        setSafetyScore(92);
-        return;
-      }
-
-      const transactions =
-        Array.isArray(data.transactions)
-          ? data.transactions
-          : [];
-
-      if (transactions.length === 0) {
-        setSafetyScore(92);
-        return;
-      }
-
-      const safeTransactions =
-        transactions.filter(
-          (transaction) =>
-            transaction.status === "Safe"
-        ).length;
-
-      const score = Math.max(
-        0,
-        Math.min(
-          100,
-          Math.round(
-            (safeTransactions /
-              transactions.length) *
-              100
-          )
-        )
-      );
-
-      setSafetyScore(score);
-    } catch (error) {
-      console.error(
-        "Safety Center API error:",
-        error
-      );
-
-      setSafetyScore(92);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  /* ================= INITIAL LOAD ================= */
-
-  useEffect(() => {
-    calculateSafetyScore();
-
-    /* Update after Risk Checker saves transaction */
-    const handleTransactionUpdate = () => {
-      calculateSafetyScore();
-    };
-
-    /* Update after login/logout */
-    const handleAuthUpdate = () => {
-      calculateSafetyScore();
-    };
-
-    window.addEventListener(
-      "transactionsUpdated",
-      handleTransactionUpdate
-    );
-
-    window.addEventListener(
-      "authUpdated",
-      handleAuthUpdate
-    );
-
-    return () => {
-      window.removeEventListener(
-        "transactionsUpdated",
-        handleTransactionUpdate
-      );
-
-      window.removeEventListener(
-        "authUpdated",
-        handleAuthUpdate
-      );
-    };
-  }, []);
-
-  /* ================= SAFETY TIPS ================= */
+  /* =====================================================
+     SAFETY TIPS
+  ===================================================== */
 
   const safetyTips = [
     {
@@ -198,7 +84,9 @@ function SafetyCenter() {
     },
   ];
 
-  /* ================= TOGGLE TIP ================= */
+  /* =====================================================
+     TOGGLE TIP
+  ===================================================== */
 
   const toggleTip = (id) => {
     setOpenTip((currentId) =>
@@ -206,7 +94,9 @@ function SafetyCenter() {
     );
   };
 
-  /* ================= FILTER TIPS ================= */
+  /* =====================================================
+     FILTER TIPS
+  ===================================================== */
 
   const filteredTips = useMemo(() => {
     const searchText =
@@ -234,22 +124,12 @@ function SafetyCenter() {
     });
   }, [search]);
 
-  /* ================= SAFETY LEVEL ================= */
-
-  let safetyLevel = "Excellent";
-
-  if (safetyScore < 80) {
-    safetyLevel = "Good";
-  }
-
-  if (safetyScore < 60) {
-    safetyLevel = "Needs Attention";
-  }
-
   return (
     <div className="safety-page">
 
-      {/* ================= HEADER ================= */}
+      {/* =====================================================
+          HEADER
+      ===================================================== */}
 
       <div className="page-heading">
 
@@ -282,7 +162,9 @@ function SafetyCenter() {
 
       </div>
 
-      {/* ================= HERO ================= */}
+      {/* =====================================================
+          HERO
+      ===================================================== */}
 
       <div className="safety-hero">
 
@@ -306,47 +188,31 @@ function SafetyCenter() {
 
         </div>
 
+        {/* =====================================================
+            SECURITY STATUS
+        ===================================================== */}
+
         <div className="safety-score">
 
           <span>
-            SAFETY SCORE
+            SECURITY STATUS
           </span>
 
-          {loading ? (
-            <strong>
-              --
-            </strong>
-          ) : (
-            <strong>
-              {safetyScore}
-            </strong>
-          )}
+          <strong>
+            PROTECTED
+          </strong>
 
           <small>
-            /100
-          </small>
-
-          <div className="safety-progress">
-
-            <div
-              style={{
-                width: `${safetyScore}%`,
-              }}
-            ></div>
-
-          </div>
-
-          <small>
-            {loading
-              ? "Analyzing transactions..."
-              : safetyLevel}
+            Follow recommended safety practices
           </small>
 
         </div>
 
       </div>
 
-      {/* ================= INFO CARDS ================= */}
+      {/* =====================================================
+          INFO CARDS
+      ===================================================== */}
 
       <div className="safety-grid">
 
@@ -410,7 +276,9 @@ function SafetyCenter() {
 
       </div>
 
-      {/* ================= CHECKLIST HEADER ================= */}
+      {/* =====================================================
+          CHECKLIST HEADER
+      ===================================================== */}
 
       <div className="safety-section-title">
 
@@ -433,7 +301,9 @@ function SafetyCenter() {
 
       </div>
 
-      {/* ================= SEARCH ================= */}
+      {/* =====================================================
+          SEARCH
+      ===================================================== */}
 
       <div className="safety-search">
 
@@ -451,7 +321,9 @@ function SafetyCenter() {
 
       </div>
 
-      {/* ================= TIPS ================= */}
+      {/* =====================================================
+          SAFETY TIPS
+      ===================================================== */}
 
       <div className="safety-tips">
 
@@ -529,11 +401,9 @@ function SafetyCenter() {
                     </div>
 
                     <p>
-
                       {isOpen
                         ? tip.text
                         : "Click to view the recommended security practice."}
-
                     </p>
 
                     {isOpen && (
@@ -571,7 +441,9 @@ function SafetyCenter() {
 
       </div>
 
-      {/* ================= EMERGENCY ================= */}
+      {/* =====================================================
+          EMERGENCY
+      ===================================================== */}
 
       <div className="emergency-card">
 
