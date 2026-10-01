@@ -48,7 +48,7 @@ function Login() {
 
     try {
       const response = await fetch(
-        "https://smart-pay-safe.onrender.com/api/auth/login",
+        "http://localhost:8080/api/auth/login",
         {
           method: "POST",
           headers: {

@@ -138,187 +138,173 @@ function Home() {
         </div>
 
         {/* =====================================================
-            PAYMENT MONITOR
-        ===================================================== */}
+    SECURITY PROTECTION CARD
+===================================================== */}
 
-        <div
-          className="payment-card-wrapper"
+<div
+  className="payment-card-wrapper"
+  style={{
+    position: "relative",
+    zIndex: 2,
+  }}
+>
+  <div
+    className="payment-card"
+    style={{
+      padding: "34px",
+      minHeight: "520px",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      background: "rgba(255, 255, 255, 0.92)",
+      borderRadius: "28px",
+    }}
+  >
+
+    {/* ICON */}
+
+    <div
+      style={{
+        width: "64px",
+        height: "64px",
+        borderRadius: "18px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "#eaf3ff",
+        marginBottom: "26px",
+      }}
+    >
+      <ShieldCheck size={34} />
+    </div>
+
+    {/* HEADING */}
+
+    <p
+      style={{
+        margin: 0,
+        fontSize: "12px",
+        fontWeight: 700,
+        letterSpacing: "2px",
+        color: "#64748b",
+      }}
+    >
+      SMART PAY-SAFE
+    </p>
+
+    <h2
+      style={{
+        margin: "10px 0 14px",
+        fontSize: "32px",
+        lineHeight: 1.15,
+        color: "#172033",
+      }}
+    >
+      Your Payment
+      <br />
+      <span style={{ color: "#2476d8" }}>
+        Safety Matters.
+      </span>
+    </h2>
+
+    <p
+      style={{
+        margin: "0 0 28px",
+        fontSize: "15px",
+        lineHeight: 1.7,
+        color: "#64748b",
+      }}
+    >
+      Smart Pay-Safe helps you identify suspicious
+      payments and make safer digital payment decisions.
+    </p>
+
+    {/* SECURITY FEATURES */}
+
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "14px",
+        marginBottom: "28px",
+      }}
+    >
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "14px",
+        }}
+      >
+        <CheckCircle2 size={20} />
+        <span>Smart Risk Analysis</span>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "14px",
+        }}
+      >
+        <CheckCircle2 size={20} />
+        <span>Fraud Detection</span>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "14px",
+        }}
+      >
+        <CheckCircle2 size={20} />
+        <span>Secure Payment Practices</span>
+      </div>
+
+    </div>
+
+    {/* STATUS */}
+
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "12px",
+        padding: "16px 18px",
+        borderRadius: "16px",
+        background: "#effcf7",
+        border: "1px solid #d2f5e8",
+      }}
+    >
+      <ShieldCheck size={22} />
+
+      <div>
+        <strong
           style={{
-            position: "relative",
-            zIndex: 2,
+            display: "block",
+            fontSize: "14px",
+            color: "#172033",
           }}
         >
+          Protection Active
+        </strong>
 
-          <div className="payment-glow"></div>
+        <span
+          style={{
+            fontSize: "12px",
+            color: "#64748b",
+          }}
+        >
+          Your safety comes first.
+        </span>
+      </div>
 
-          <div className="payment-card">
+    </div>
 
-            {/* PAYMENT HEADER */}
-
-            <div className="payment-header">
-
-              <div className="payment-brand">
-
-                <div className="mini-logo">
-                  <ShieldCheck size={18} />
-                </div>
-
-                <div>
-
-                  <p>
-                    SMART PAY-SAFE
-                  </p>
-
-                  <h3>
-                    Payment Monitor
-                  </h3>
-
-                </div>
-
-              </div>
-
-              <div className="activity-icon">
-                <Activity size={20} />
-              </div>
-
-            </div>
-
-            {/* BALANCE */}
-
-            <div className="balance-box">
-
-              <div>
-
-                <span>
-                  Total Protected
-                </span>
-
-                <strong>
-                  ₹24,850
-                </strong>
-
-              </div>
-
-              <div className="safe-badge">
-
-                <ShieldCheck size={15} />
-
-                Protected
-
-              </div>
-
-            </div>
-
-            {/* RISK STATUS */}
-
-            <div className="risk-box">
-
-              <div>
-
-                <p className="label">
-                  PAYMENT RISK STATUS
-                </p>
-
-                <div className="risk-number">
-                  LOW RISK
-                </div>
-
-                <small>
-                  No major suspicious signals detected
-                </small>
-
-              </div>
-
-              <div className="risk-circle">
-                LOW
-              </div>
-
-            </div>
-
-            {/* RECEIVER */}
-
-            <div className="payment-detail">
-
-              <span>
-                Receiver
-              </span>
-
-              <strong>
-                verified@upi
-              </strong>
-
-            </div>
-
-            {/* AMOUNT */}
-
-            <div className="payment-detail">
-
-              <span>
-                Amount
-              </span>
-
-              <strong>
-                ₹2,500
-              </strong>
-
-            </div>
-
-            {/* SAFE MESSAGE */}
-
-            <div className="safe-message">
-
-              <div className="safe-message-icon">
-                <ShieldCheck size={20} />
-              </div>
-
-              <div>
-
-                <strong>
-                  Payment looks safe
-                </strong>
-
-                <p>
-                  No major suspicious signals detected.
-                </p>
-
-              </div>
-
-            </div>
-
-            {/* MINI STATS */}
-
-            <div className="payment-mini-stats">
-
-              <div>
-                <Smartphone size={16} />
-
-                <span>
-                  Digital
-                </span>
-              </div>
-
-              <div>
-                <CreditCard size={16} />
-
-                <span>
-                  Secure
-                </span>
-              </div>
-
-              <div>
-                <ShieldAlert size={16} />
-
-                <span>
-                  Monitored
-                </span>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
+  </div>
+</div>
       </section>
 
       {/* =====================================================

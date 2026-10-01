@@ -349,7 +349,7 @@ function Settings() {
       /* DELETE CURRENT USER TRANSACTIONS */
 
       const response = await fetch(
-        "https://smart-pay-safe.onrender.com/api/transactions/clear",
+        "http://localhost:8080/api/transactions/clear",
         {
           method: "DELETE",
           headers: {

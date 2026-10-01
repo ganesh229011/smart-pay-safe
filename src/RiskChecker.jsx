@@ -213,7 +213,7 @@ function RiskChecker() {
 
     try {
       const response = await fetch(
-        "https://smart-pay-safe.onrender.com/api/transactions",
+        "http://localhost:8080/api/transactions",
         {
           method: "POST",
 

@@ -36,7 +36,7 @@ function Transactions() {
 
     try {
       const response = await fetch(
-        "https://smart-pay-safe.onrender.com/api/transactions",
+        "http://localhost:8080/api/transactions",
         {
           method: "GET",
           headers: {

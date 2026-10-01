@@ -78,7 +78,7 @@ function Register() {
 
     try {
       const response = await fetch(
-        "https://smart-pay-safe.onrender.com/api/auth/register",
+        "http://localhost:8080/api/auth/register",
         {
           method: "POST",
           headers: {
